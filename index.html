@@ -93,19 +93,13 @@
             </form>
         </section>
 
-        <!-- VIEW 3: Final Invitation Summary -->
+        <!-- VIEW 3: Final Invitation Summary & Live List -->
         <section id="view3" class="view-panel">
             <div class="badge-pill badge-success">It’s a date! Don’t even try to find a problem naa 😈</div>
             <h2 class="headline">Plan confirmed. No more excuses. 👌</h2>
-            <p class="subtext">Send this card to the <b>💬 Chat</b> so everyone stays on the same page & nobody can
-                escape. 🤝</p>
-
+            <p class="subtext">Share this link in your group chat. Everyone who signs will show up in the live list below! 🤝</p>
+        
             <div class="ticket-card">
-                <!-- TICKET SIGNATURE PROOF ROW -->
-                <div class="ticket-row">
-                    <span class="ticket-label">CONFIRMED BY</span>
-                    <span class="ticket-value" id="ticketAttendee">--</span>
-                </div>
                 <div class="ticket-row">
                     <span class="ticket-label">WHEN</span>
                     <span class="ticket-value" id="ticketWhen">--</span>
@@ -119,12 +113,19 @@
                     <span class="ticket-value" id="ticketVibe">--</span>
                 </div>
             </div>
-
+        
+            <!-- THIS IS THE LIVE SQUAD LIST BOX -->
+            <div class="live-list-box">
+                <h3 class="live-list-title">⚡ Live Confirmed Squad (<span id="attendeeCount">0</span>)</h3>
+                <ul id="liveAttendeeList" class="attendee-list">
+                    <li>Loading signatures...</li>
+                </ul>
+            </div>
+        
             <button class="btn btn-primary" onclick="copyInvite()">
-                💌 Copy This & Invite
+               💌 Copy Summary & Invite
             </button>
         </section>
-
     </main>
 
     <!-- Firebase Modular SDKs -->
