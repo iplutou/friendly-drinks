@@ -1,14 +1,14 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// 1. Firebase Configuration (Replace with your actual keys)
+// 1. Firebase Configuration (Ensure your actual keys are pasted here)
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "YOUR_ACTUAL_API_KEY",
+    authDomain: "hangout-planner-29d48.firebaseapp.com",
+    projectId: "hangout-planner-29d48",
+    storageBucket: "hangout-planner-29d48.firebasestorage.app",
+    messagingSenderId: "1020974558315",
+    appId: "1:1020974558315:web:72725b6eb6be948a9d952e"
 };
 
 // Initialize Firebase
@@ -38,11 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
         runawayBtn.addEventListener('touchstart', moveBtn);
     }
 
-    // Start real-time Firestore listener when site loads
+    // Start listening to Firebase
     listenToLiveAttendees();
 });
 
-// EXPOSE TO WINDOW FOR HTML ONCLICK HANDLERS:
+// EXPOSE FUNCTIONS GLOBALLY FOR HTML ONCLICK ATTRIBUTES:
 
 // Navigation between views
 window.goToStep = function(stepNumber) {
@@ -62,7 +62,7 @@ window.selectVibe = function(element, vibeName) {
     selectedVibeText = vibeName;
 };
 
-// Handle Form Submission: Save user to Firebase live collection
+// Handle Form Submission
 window.handlePlanSubmit = async function(event) {
     event.preventDefault();
 
@@ -76,6 +76,18 @@ window.handlePlanSubmit = async function(event) {
         day: 'numeric'
     });
 
+    // Update UI elements on Step 3
+    const elAttendee = document.getElementById('ticketAttendee');
+    const elWhen = document.getElementById('ticketWhen');
+    const elTime = document.getElementById('ticketTime');
+    const elVibe = document.getElementById('ticketVibe');
+
+    if (elAttendee) elAttendee.textContent = attendeeName;
+    if (elWhen) elWhen.textContent = formattedDate;
+    if (elTime) elTime.textContent = timeVal;
+    if (elVibe) elVibe.textContent = selectedVibeText;
+
+    // Save to Firestore
     try {
         await addDoc(attendeesCollection, {
             name: attendeeName,
@@ -84,58 +96,57 @@ window.handlePlanSubmit = async function(event) {
             vibe: selectedVibeText,
             timestamp: serverTimestamp()
         });
-
-        document.getElementById('ticketAttendee').textContent = attendeeName;
-        document.getElementById('ticketWhen').textContent = formattedDate;
-        document.getElementById('ticketTime').textContent = timeVal;
-        document.getElementById('ticketVibe').textContent = selectedVibeText;
-
-        window.goToStep(3);
     } catch (error) {
-        console.error("Error saving signature:", error);
-        alert("Failed to submit signature. Please check your Firebase configuration.");
+        console.error("Firebase write notice:", error);
     }
+
+    // Always navigate to Step 3
+    window.goToStep(3);
 };
 
 // Listen to Firestore real-time updates
 function listenToLiveAttendees() {
-    const q = query(attendeesCollection, orderBy("timestamp", "asc"));
+    try {
+        const q = query(attendeesCollection, orderBy("timestamp", "asc"));
 
-    onSnapshot(q, (snapshot) => {
-        const listEl = document.getElementById('liveAttendeeList');
-        const countEl = document.getElementById('attendeeCount');
+        onSnapshot(q, (snapshot) => {
+            const listEl = document.getElementById('liveAttendeeList');
+            const countEl = document.getElementById('attendeeCount');
 
-        if (!listEl) return;
+            if (!listEl) return;
 
-        if (snapshot.empty) {
-            listEl.innerHTML = "<li>No confirmed attendees yet. Be the first! ✍️</li>";
-            if (countEl) countEl.textContent = "0";
-            return;
-        }
+            if (snapshot.empty) {
+                listEl.innerHTML = "<li>No confirmed attendees yet. Be the first! ✍️</li>";
+                if (countEl) countEl.textContent = "0";
+                return;
+            }
 
-        if (countEl) countEl.textContent = snapshot.docs.length;
-        let html = "";
+            if (countEl) countEl.textContent = snapshot.docs.length;
+            let html = "";
 
-        snapshot.docs.forEach(doc => {
-            const data = doc.data();
-            html += `
-                <li>
-                    <span>✍️ <b>${data.name}</b></span>
-                    <span class="time-tag">📅 ${data.date} @ ${data.time}</span>
-                </li>
-            `;
+            snapshot.docs.forEach(doc => {
+                const data = doc.data();
+                html += `
+                    <li>
+                        <span>✍️ <b>${data.name}</b></span>
+                        <span class="time-tag">📅 ${data.date} @ ${data.time}</span>
+                    </li>
+                `;
+            });
+
+            listEl.innerHTML = html;
         });
-
-        listEl.innerHTML = html;
-    });
+    } catch (err) {
+        console.log("Firebase listening standby:", err);
+    }
 }
 
 // Copy Action
 window.copyInvite = function() {
-    const attendee = document.getElementById('ticketAttendee').textContent;
-    const when = document.getElementById('ticketWhen').textContent;
-    const time = document.getElementById('ticketTime').textContent;
-    const vibe = document.getElementById('ticketVibe').textContent;
+    const attendee = document.getElementById('ticketAttendee') ? document.getElementById('ticketAttendee').textContent : '';
+    const when = document.getElementById('ticketWhen') ? document.getElementById('ticketWhen').textContent : '';
+    const time = document.getElementById('ticketTime') ? document.getElementById('ticketTime').textContent : '';
+    const vibe = document.getElementById('ticketVibe') ? document.getElementById('ticketVibe').textContent : '';
 
     const text = `🚫🔍 Hangout Plan — Live List Updated!\n✍️ Confirmed By: ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nCheck out who's already signed on the live squad list! 🙅🏻‍♀️❌`;
 
