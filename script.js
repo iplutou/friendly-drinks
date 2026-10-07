@@ -1,57 +1,46 @@
-const noBtn = document.getElementById('noBtn');
-let selectedDrinkType = "";
+let selectedVibeText = "Gathering at Home for Cooking Dinner 🍳";
 
-// Set default date to today & default time on load
 document.addEventListener('DOMContentLoaded', () => {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('eventDate').value = today;
-    document.getElementById('eventTime').value = "18:00";
+    // Default date set to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('dateInput').value = tomorrow.toISOString().split('T')[0];
 });
 
-// Runaway "No" button logic
-function moveNoButton() {
-    const container = document.getElementById('drinksContainer');
-    const containerRect = container.getBoundingClientRect();
-    const btnRect = noBtn.getBoundingClientRect();
-
-    const maxX = containerRect.width - btnRect.width - 40;
-    const maxY = containerRect.height - btnRect.height - 40;
-
-    const randomX = Math.floor(Math.random() * maxX) - (containerRect.width / 2 - btnRect.width);
-    const randomY = Math.floor(Math.random() * maxY) - (containerRect.height / 2 - btnRect.height);
-
-    noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+// Runaway No Button Logic
+const runawayBtn = document.getElementById('runawayBtn');
+if (runawayBtn) {
+    const moveBtn = () => {
+        const x = (Math.random() - 0.5) * 180;
+        const y = (Math.random() - 0.5) * 120;
+        runawayBtn.style.transform = `translate(${x}px, ${y}px)`;
+    };
+    runawayBtn.addEventListener('mouseover', moveBtn);
+    runawayBtn.addEventListener('touchstart', moveBtn);
 }
 
-if (noBtn) {
-    noBtn.addEventListener('mouseover', moveNoButton);
-    noBtn.addEventListener('click', moveNoButton);
+// Navigation between views
+function goToStep(stepNumber) {
+    document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
+    document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
+
+    document.getElementById(`view${stepNumber}`).classList.add('active');
+    document.getElementById(`dot${stepNumber}`).classList.add('active');
 }
 
-// "Yes" Click Handler -> Transitions to Date/Time form
-function handleYesClick() {
-    document.getElementById('questionView').classList.remove('active');
-    document.getElementById('inviteView').classList.add('active');
+// Select Hangout Vibe Option
+function selectVibe(element, vibeName) {
+    document.querySelectorAll('.vibe-chip').forEach(chip => chip.classList.remove('active'));
+    element.classList.add('active');
+    selectedVibeText = vibeName;
 }
 
-// Drink Option Card Selection
-function selectDrink(cardElement, drinkName) {
-    document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
-    cardElement.classList.add('selected');
-    selectedDrinkType = drinkName;
-}
-
-// Form Submission Handler -> Transitions to Summary
-function handleFormSubmit(event) {
+// Submit Form Action
+function handlePlanSubmit(event) {
     event.preventDefault();
 
-    const dateVal = document.getElementById('eventDate').value;
-    const timeVal = document.getElementById('eventTime').value;
-
-    if (!selectedDrinkType) {
-        alert("Please select a drink vibe!");
-        return;
-    }
+    const dateVal = document.getElementById('dateInput').value;
+    const timeVal = document.getElementById('timeInput').value;
 
     const formattedDate = new Date(dateVal + 'T00:00:00').toLocaleDateString('en-US', {
         weekday: 'short',
@@ -59,25 +48,23 @@ function handleFormSubmit(event) {
         day: 'numeric'
     });
 
-    document.getElementById('summaryDate').textContent = formattedDate;
-    document.getElementById('summaryTime').textContent = timeVal;
-    document.getElementById('summaryDrink').textContent = selectedDrinkType;
+    document.getElementById('ticketWhen').textContent = formattedDate;
+    document.getElementById('ticketTime').textContent = timeVal;
+    document.getElementById('ticketVibe').textContent = selectedVibeText;
 
-    document.getElementById('inviteView').classList.remove('active');
-    document.getElementById('confirmView').classList.add('active');
+    goToStep(3);
 }
 
-// Copy Invitation Text
-function copyPlan() {
-    const date = document.getElementById('summaryDate').textContent;
-    const time = document.getElementById('summaryTime').textContent;
-    const drink = document.getElementById('summaryDrink').textContent;
+// Copy Text Action
+function copyInvite() {
+    const when = document.getElementById('ticketWhen').textContent;
+    const time = document.getElementById('ticketTime').textContent;
+    const vibe = document.getElementById('ticketVibe').textContent;
 
-    const inviteText = `🍻 Drinks Hangout!\n📅 Date: ${date}\n⏰ Time: ${time}\n🍹 Vibe: ${drink}\n\nLet me know if you're in!`;
+    const text = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌
+`;
 
-    navigator.clipboard.writeText(inviteText).then(() => {
-        alert("Invitation text copied! Share it with your friends.");
-    }).catch(err => {
-        console.error("Failed to copy text: ", err);
+    navigator.clipboard.writeText(text).then(() => {
+        alert("Invite details copied to clipboard!");
     });
 }
