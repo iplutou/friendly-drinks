@@ -4,108 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drinks & Hangout? 🍻</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="drinks-card-container" id="drinksContainer">
+    <!-- Floating Background Decor -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
 
-        <!-- Step 1: Initial Question with Runaway "No" Button -->
-        <div id="questionView" class="card-view active">
-            <div class="icon-header">
-                <i class="fa-solid fa-beer-mug-empty beer-bounce"></i>
-            </div>
-            <h1 class="main-heading">Hey there! 👋</h1>
-            <p class="sub-heading">Down to catch up and grab some drinks this week?</p>
-
-            <div class="action-buttons">
-                <button id="yesBtn" class="btn btn-yes" onclick="handleYesClick()">
-                    <i class="fa-solid fa-face-smile-wink"></i> Yes, I'd love to!
-                </button>
-                <button id="noBtn" class="btn btn-no">
-                    No 🙈
-                </button>
-            </div>
+    <main class="app-card" id="appCard">
+        
+        <!-- Step Indicator -->
+        <div class="step-dots">
+            <span class="dot active" id="dot1"></span>
+            <span class="dot" id="dot2"></span>
+            <span class="dot" id="dot3"></span>
         </div>
 
-        <!-- Step 2: Date, Time & Vibe Selection -->
-        <div id="inviteView" class="card-view">
-            <div class="icon-header">
-                <i class="fa-solid fa-calendar-check"></i>
-            </div>
-            <h1 class="main-heading">Drinks this week? 🍻</h1>
-            <p class="sub-heading">Awesome! Pick when and what you're down for:</p>
+        <!-- VIEW 1: Initial Question -->
+        <section id="view1" class="view-panel active">
+            <div class="badge-pill">Hey U 👋</div>
+            <h1 class="headline">R we doing something this week or nah??? 👀</h1>
+            <p class="subtext">Life is short, stress is long & problems are apparently on a daily subscription. We didn’t ask for them but here we are… so yeah, let’s hang out 👉👈
+</p>
 
-            <form id="inviteForm" onsubmit="handleFormSubmit(event)">
-                <!-- Date & Time Inputs -->
-                <div class="form-group-row">
-                    <div class="input-group">
-                        <label for="eventDate"><i class="fa-regular fa-calendar-days"></i> Date</label>
-                        <input type="date" id="eventDate" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="eventTime"><i class="fa-regular fa-clock"></i> Time</label>
-                        <input type="time" id="eventTime" required>
-                    </div>
-                </div>
-
-                <!-- Drink Preferences Grid -->
-                <label class="section-label"><i class="fa-solid fa-whiskey-glass"></i> Pick your vibe:</label>
-                <div class="drink-options-grid">
-                    <div class="option-card" onclick="selectDrink(this, 'Cocktails & Lounge')">
-                        <i class="fa-solid fa-martini-glass-citrus"></i>
-                        <span>Cocktails</span>
-                    </div>
-                    <div class="option-card" onclick="selectDrink(this, 'Beers & Alcohol')">
-                        <i class="fa-solid fa-beer-mug-empty"></i>
-                        <span>Beers & Alcohol</span>
-                    </div>
-                    <div class="option-card" onclick="selectDrink(this, 'Coffee & Boba')">
-                        <i class="fa-solid fa-mug-hot"></i>
-                        <span>Coffee / Boba</span>
-                    </div>
-                    <div class="option-card" onclick="selectDrink(this, 'Wine Bar')">
-                        <i class="fa-solid fa-wine-glass"></i>
-                        <span>Wine Bar</span>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa-solid fa-paper-plane"></i> Count Me In!
+            <div class="button-stage">
+                <button class="btn btn-primary" onclick="goToStep(2)">
+                    103% daii 🫡✅
                 </button>
+                <button id="runawayBtn" class="btn btn-ghost">
+                    say no & u'r getting a tiny beating 🥊 okaii mai???
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW 2: Time & Vibe Picker -->
+        <section id="view2" class="view-panel">
+            <div class="badge-pill">Step 2 of 2</div>
+            <h2 class="headline">Pick the details</h2>
+            <p class="subtext">When are you free and what's your current vibe?</p>
+
+            <form id="planForm" onsubmit="handlePlanSubmit(event)">
+                <div class="form-row">
+                    <div class="input-field">
+                        <label for="dateInput">DAY</label>
+                        <input type="date" id="dateInput" required>
+                    </div>
+                    <div class="input-field">
+                        <label for="timeInput">TIME</label>
+                        <input type="time" id="timeInput" value="18:00" required>
+                    </div>
+                </div>
+
+                <label class="field-label">CHOOSE YOUR DRINK VIBE</label>
+                <div class="vibe-selector">
+                    <div class="vibe-chip active" onclick="selectVibe(this, 'Gathering at Home for Cooking Dinner 🍳')">
+                        <span class="chip-emoji">🍳</span>
+                        <span class="chip-text">Home Cooking</span>
+                    </div>
+                    <div class="vibe-chip" onclick="selectVibe(this, 'Gathering at Home for Soju Drinks 🍾')">
+                        <span class="chip-emoji">🍾</span>
+                        <span class="chip-text">Home Soju</span>
+                    </div>
+                    <div class="vibe-chip" onclick="selectVibe(this, 'Meet at QSNCC for မြန်မာစျေး 🇲🇲')">
+                        <span class="chip-emoji">🇲🇲</span>
+                        <span class="chip-text">QSNCC (မြန်မာစျေး)</span>
+                    </div>
+                    <div class="vibe-chip" onclick="selectVibe(this, 'Chill & Grab Drinks at Bar 🍸')">
+                        <span class="chip-emoji">🍸</span>
+                        <span class="chip-text">Chill at Bar</span>
+                    </div>
+                </div>
+
+                <div class="button-stage">
+                    <button type="submit" class="btn btn-primary">
+                        🔒🫵🏻 u r locked
+                    </button>
+                </div>
             </form>
-        </div>
+        </section>
 
-        <!-- Step 3: Confirmation & Summary -->
-        <div id="confirmView" class="card-view">
-            <div class="icon-header">
-                <i class="fa-solid fa-circle-check success-icon"></i>
-            </div>
-            <h1 class="main-heading">It's a plan! 🎉</h1>
-            <p class="sub-heading">Here are the details for our hangout:</p>
+        <!-- VIEW 3: Final Invitation Summary -->
+        <section id="view3" class="view-panel">
+            <div class="badge-pill badge-success">It’s a date! Don’t even try to find a problem naa 😈</div>
+            <h2 class="headline">Plan confirmed. No more excuses. 👌</h2>
+            <p class="subtext">Send this card to the <b>💬 Chat</b> so everyone stays on the same page & nobody can escape. 🤝</p>
 
-            <div class="summary-box">
-                <div class="summary-item">
-                    <i class="fa-regular fa-calendar"></i>
-                    <span id="summaryDate">--</span>
+            <div class="ticket-card">
+                <div class="ticket-row">
+                    <span class="ticket-label">WHEN</span>
+                    <span class="ticket-value" id="ticketWhen">--</span>
                 </div>
-                <div class="summary-item">
-                    <i class="fa-regular fa-clock"></i>
-                    <span id="summaryTime">--</span>
+                <div class="ticket-row">
+                    <span class="ticket-label">TIME</span>
+                    <span class="ticket-value" id="ticketTime">--</span>
                 </div>
-                <div class="summary-item">
-                    <i class="fa-solid fa-glass-water"></i>
-                    <span id="summaryDrink">--</span>
+                <div class="ticket-row">
+                    <span class="ticket-label">PLAN</span>
+                    <span class="ticket-value" id="ticketVibe">--</span>
                 </div>
             </div>
 
-            <button class="btn btn-primary" onclick="copyPlan()">
-                <i class="fa-solid fa-copy"></i> Copy Invitation Text
+            <button class="btn btn-primary" onclick="copyInvite()">
+               💌 Copy This & Invite
             </button>
-        </div>
+        </section>
 
-    </div>
+    </main>
 
     <script src="script.js"></script>
 </body>
