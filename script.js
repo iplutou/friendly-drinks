@@ -39,6 +39,7 @@ function selectVibe(element, vibeName) {
 function handlePlanSubmit(event) {
     event.preventDefault();
 
+    const attendeeName = document.getElementById('attendeeNameInput').value.trim();
     const dateVal = document.getElementById('dateInput').value;
     const timeVal = document.getElementById('timeInput').value;
 
@@ -48,6 +49,8 @@ function handlePlanSubmit(event) {
         day: 'numeric'
     });
 
+    // Populate ticket UI
+    document.getElementById('ticketAttendee').textContent = attendeeName;
     document.getElementById('ticketWhen').textContent = formattedDate;
     document.getElementById('ticketTime').textContent = timeVal;
     document.getElementById('ticketVibe').textContent = selectedVibeText;
@@ -55,14 +58,14 @@ function handlePlanSubmit(event) {
     goToStep(3);
 }
 
-// Copy Text Action
+// Copy Text Action with Signature Proof
 function copyInvite() {
+    const attendee = document.getElementById('ticketAttendee').textContent;
     const when = document.getElementById('ticketWhen').textContent;
     const time = document.getElementById('ticketTime').textContent;
     const vibe = document.getElementById('ticketVibe').textContent;
 
-    const text = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌
-`;
+    const text = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n✍️ Confirmed By (Proof): ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌`;
 
     navigator.clipboard.writeText(text).then(() => {
         alert("Invite details copied to clipboard!");
