@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drinks & Hangout? 🍻</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <!-- Floating Background Decor -->
@@ -13,7 +15,7 @@
     <div class="bg-blob blob-2"></div>
 
     <main class="app-card" id="appCard">
-        
+
         <!-- Step Indicator -->
         <div class="step-dots">
             <span class="dot active" id="dot1"></span>
@@ -24,9 +26,10 @@
         <!-- VIEW 1: Initial Question -->
         <section id="view1" class="view-panel active">
             <div class="badge-pill">Hey U 👋</div>
-            <h1 class="headline">R we doing something this week or nah??? 👀</h1>
-            <p class="subtext">Life is short, stress is long & problems are apparently on a daily subscription. We didn’t ask for them but here we are… so yeah, let’s hang out 👉👈
-</p>
+            <h1 class="headline">Are we doing something this week or nah??? 👀</h1>
+            <p class="subtext">Life is short, stress is long & problems are apparently on a daily subscription. We
+                didn’t ask for them but here we are… so yeah, let’s hang out 👉👈
+            </p>
 
             <div class="button-stage">
                 <button class="btn btn-primary" onclick="goToStep(2)">
@@ -45,6 +48,12 @@
             <p class="subtext">When are you free and what's your current vibe?</p>
 
             <form id="planForm" onsubmit="handlePlanSubmit(event)">
+                <!-- REQUIRED PROOF NAME / SIGNATURE -->
+                <div class="input-field full-width">
+                    <label for="attendeeNameInput">CONFIRMED BY (YOUR NAME / NICKNAME) *</label>
+                    <input type="text" id="attendeeNameInput" placeholder="e.g. Jennie Ruby Jane ✍️" required>
+                </div>
+
                 <div class="form-row">
                     <div class="input-field">
                         <label for="dateInput">DAY</label>
@@ -88,9 +97,15 @@
         <section id="view3" class="view-panel">
             <div class="badge-pill badge-success">It’s a date! Don’t even try to find a problem naa 😈</div>
             <h2 class="headline">Plan confirmed. No more excuses. 👌</h2>
-            <p class="subtext">Send this card to the <b>💬 Chat</b> so everyone stays on the same page & nobody can escape. 🤝</p>
+            <p class="subtext">Send this card to the <b>💬 Chat</b> so everyone stays on the same page & nobody can
+                escape. 🤝</p>
 
             <div class="ticket-card">
+                <!-- TICKET SIGNATURE PROOF ROW -->
+                <div class="ticket-row">
+                    <span class="ticket-label">CONFIRMED BY</span>
+                    <span class="ticket-value" id="ticketAttendee">--</span>
+                </div>
                 <div class="ticket-row">
                     <span class="ticket-label">WHEN</span>
                     <span class="ticket-value" id="ticketWhen">--</span>
@@ -106,7 +121,7 @@
             </div>
 
             <button class="btn btn-primary" onclick="copyInvite()">
-               💌 Copy This & Invite
+                💌 Copy This & Invite
             </button>
         </section>
 
@@ -114,4 +129,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
