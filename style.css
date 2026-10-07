@@ -25,6 +25,49 @@ body {
     margin-bottom: 1.25rem;
 }
 
+.live-list-box {
+    width: 100%;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.live-list-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #334155;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+}
+
+.attendee-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.attendee-list li {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.attendee-list li .time-tag {
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
 .bg-blob {
     position: absolute;
     width: 320px;
