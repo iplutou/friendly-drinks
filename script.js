@@ -1,9 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// 1. Firebase Configuration (Ensure your actual keys are pasted here)
+// Actual Firebase Keys from your Project Settings
 const firebaseConfig = {
-    apiKey: "YOUR_ACTUAL_API_KEY",
+    apiKey: "AIzaSyDHT50bejupdQbnGKeryXPmCD5J9fI3qkA",
     authDomain: "hangout-planner-29d48.firebaseapp.com",
     projectId: "hangout-planner-29d48",
     storageBucket: "hangout-planner-29d48.firebasestorage.app",
@@ -38,13 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
         runawayBtn.addEventListener('touchstart', moveBtn);
     }
 
-    // Start listening to Firebase
+    // Start real-time Firestore listener
     listenToLiveAttendees();
 });
 
 // EXPOSE FUNCTIONS GLOBALLY FOR HTML ONCLICK ATTRIBUTES:
 
-// Navigation between views
 window.goToStep = function(stepNumber) {
     document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
     document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
@@ -55,14 +54,12 @@ window.goToStep = function(stepNumber) {
     if (targetDot) targetDot.classList.add('active');
 };
 
-// Select Hangout Vibe Option
 window.selectVibe = function(element, vibeName) {
     document.querySelectorAll('.vibe-chip').forEach(chip => chip.classList.remove('active'));
     element.classList.add('active');
     selectedVibeText = vibeName;
 };
 
-// Handle Form Submission
 window.handlePlanSubmit = async function(event) {
     event.preventDefault();
 
@@ -76,18 +73,14 @@ window.handlePlanSubmit = async function(event) {
         day: 'numeric'
     });
 
-    // Update UI elements on Step 3
-    const elAttendee = document.getElementById('ticketAttendee');
     const elWhen = document.getElementById('ticketWhen');
     const elTime = document.getElementById('ticketTime');
     const elVibe = document.getElementById('ticketVibe');
 
-    if (elAttendee) elAttendee.textContent = attendeeName;
     if (elWhen) elWhen.textContent = formattedDate;
     if (elTime) elTime.textContent = timeVal;
     if (elVibe) elVibe.textContent = selectedVibeText;
 
-    // Save to Firestore
     try {
         await addDoc(attendeesCollection, {
             name: attendeeName,
@@ -100,11 +93,9 @@ window.handlePlanSubmit = async function(event) {
         console.error("Firebase write notice:", error);
     }
 
-    // Always navigate to Step 3
     window.goToStep(3);
 };
 
-// Listen to Firestore real-time updates
 function listenToLiveAttendees() {
     try {
         const q = query(attendeesCollection, orderBy("timestamp", "asc"));
@@ -141,14 +132,12 @@ function listenToLiveAttendees() {
     }
 }
 
-// Copy Action
 window.copyInvite = function() {
-    const attendee = document.getElementById('ticketAttendee') ? document.getElementById('ticketAttendee').textContent : '';
     const when = document.getElementById('ticketWhen') ? document.getElementById('ticketWhen').textContent : '';
     const time = document.getElementById('ticketTime') ? document.getElementById('ticketTime').textContent : '';
     const vibe = document.getElementById('ticketVibe') ? document.getElementById('ticketVibe').textContent : '';
 
-    const text = `🚫🔍 Hangout Plan — Live List Updated!\n✍️ Confirmed By: ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nCheck out who's already signed on the live squad list! 🙅🏻‍♀️❌`;
+    const text = `🚫🔍 Hangout Plan — Live List Updated!\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nCheck out who's already signed on the live squad list! 🙅🏻‍♀️❌`;
 
     navigator.clipboard.writeText(text).then(() => {
         alert("Invite details copied to clipboard!");
