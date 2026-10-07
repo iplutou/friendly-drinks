@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drinks & Hangout? 🍻</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="friends-drinks.css">
+</head>
+<body>
+
+    <div class="drinks-card-container" id="drinksContainer">
+        <!-- Step 1: Invite & Details -->
+        <div id="inviteView" class="card-view active">
+            <div class="icon-header">
+                <i class="fa-solid fa-beer-mug-empty beer-bounce"></i>
+            </div>
+            <h1 class="main-heading">Drinks this week? 🍻</h1>
+            <p class="sub-heading">Let's catch up and grab a drink! Pick when and what you're down for:</p>
+
+            <form id="inviteForm" onsubmit="handleFormSubmit(event)">
+                <!-- Date & Time Inputs -->
+                <div class="form-group-row">
+                    <div class="input-group">
+                        <label for="eventDate"><i class="fa-regular fa-calendar-days"></i> Date</label>
+                        <input type="date" id="eventDate" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="eventTime"><i class="fa-regular fa-clock"></i> Time</label>
+                        <input type="time" id="eventTime" required>
+                    </div>
+                </div>
+
+                <!-- Drink Preferences Grid -->
+                <label class="section-label"><i class="fa-solid fa-whiskey-glass"></i> Pick your vibe:</label>
+                <div class="drink-options-grid">
+                    <div class="option-card" onclick="selectDrink(this, 'Cocktails & Lounge')">
+                        <i class="fa-solid fa-martini-glass-citrus"></i>
+                        <span>Cocktails</span>
+                    </div>
+                    <div class="option-card" onclick="selectDrink(this, 'Beer & Pub')">
+                        <i class="fa-solid fa-beer-mug-empty"></i>
+                        <span>Beers & Alcohol</span>
+                    </div>
+                    <div class="option-card" onclick="selectDrink(this, 'Coffee & Tea')">
+                        <i class="fa-solid fa-mug-hot"></i>
+                        <span>Coffee / Boba</span>
+                    </div>
+                    <div class="option-card" onclick="selectDrink(this, 'Wine & Dine')">
+                        <i class="fa-solid fa-wine-glass"></i>
+                        <span>Wine Bar</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-paper-plane"></i> Count Me In!
+                </button>
+            </form>
+        </div>
+
+        <!-- Step 2: Confirmation & Summary -->
+        <div id="confirmView" class="card-view">
+            <div class="icon-header">
+                <i class="fa-solid fa-circle-check success-icon"></i>
+            </div>
+            <h1 class="main-heading">It's a plan! 🎉</h1>
+            <p class="sub-heading">Here are the details for our hangout:</p>
+
+            <div class="summary-box">
+                <div class="summary-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span id="summaryDate">--</span>
+                </div>
+                <div class="summary-item">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="summaryTime">--</span>
+                </div>
+                <div class="summary-item">
+                    <i class="fa-solid fa-glass-water"></i>
+                    <span id="summaryDrink">--</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="copyPlan()">
+                <i class="fa-solid fa-copy"></i> Copy Invitation Text
+            </button>
+        </div>
+    </div>
+
+    <script src="friends-drinks.js"></script>
+</body>
+</html>
