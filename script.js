@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Actual Firebase Keys from your Project Settings
+// 1. YOUR REAL FIREBASE KEYS
 const firebaseConfig = {
     apiKey: "AIzaSyDHT50bejupdQbnGKeryXPmCD5J9fI3qkA",
     authDomain: "hangout-planner-29d48.firebaseapp.com",
@@ -137,7 +137,7 @@ window.copyInvite = function() {
     const time = document.getElementById('ticketTime') ? document.getElementById('ticketTime').textContent : '';
     const vibe = document.getElementById('ticketVibe') ? document.getElementById('ticketVibe').textContent : '';
 
-    const text = `🚫🔍 Hangout Plan — Live List Updated!\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nCheck out who's already signed on the live squad list! 🙅🏻‍♀️❌`;
+    const text = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n✍️ Confirmed By (Proof): ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌`;
 
     navigator.clipboard.writeText(text).then(() => {
         alert("Invite details copied to clipboard!");
