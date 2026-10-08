@@ -273,11 +273,41 @@ body {
     border: 1.5px solid #f472b6;
     background: #ffffff;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.vibe-chip .chip-emoji { font-size: 1.15rem; flex-shrink: 0; }
-.vibe-chip .chip-text { font-size: 0.8rem; font-weight: 700; color: #831843; line-height: 1.2; text-align: left; }
-.vibe-chip.active { border-color: #db2777; background: #f7b6e7; box-shadow: 0 0 0 2px rgba(219,39,119,0.2); }
+
+.vibe-chip .chip-emoji { 
+    font-size: 1.15rem; 
+    flex-shrink: 0; 
+    transition: transform 0.25s ease;
+}
+
+.vibe-chip .chip-text { 
+    font-size: 0.8rem; 
+    font-weight: 700; 
+    color: #831843; 
+    line-height: 1.2; 
+    text-align: left; 
+}
+
+/* Hover Effect */
+.vibe-chip:hover {
+    background-color: #fdf2f8;
+    border-color: #db2777;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(219, 39, 119, 0.15);
+}
+
+.vibe-chip:hover .chip-emoji {
+    transform: scale(1.15) rotate(5deg);
+}
+
+/* Active / Selected State */
+.vibe-chip.active { 
+    border-color: #db2777; 
+    background: #f7b6e7; 
+    box-shadow: 0 0 0 2px rgba(219,39,119,0.25); 
+}
 
 .button-stage {
     display: flex;
