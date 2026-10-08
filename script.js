@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Your Firebase Configuration
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDHT50bejupdQbnGKeryXPmCD5J9fI3qkA",
   authDomain: "hangout-planner-29d48.firebaseapp.com",
@@ -79,6 +79,7 @@ window.handlePlanSubmit = async function(event) {
     const elTime = document.getElementById('ticketTime');
     const elVibe = document.getElementById('ticketVibe');
 
+    if (elAttendee) elAttendee.textContent = attendeeName;
     if (elWhen) elWhen.textContent = formattedDate;
     if (elTime) elTime.textContent = timeVal;
     if (elVibe) elVibe.textContent = selectedVibeText;
@@ -101,7 +102,6 @@ window.handlePlanSubmit = async function(event) {
 // Listen to Firestore real-time updates
 function listenToLiveAttendees() {
     try {
-        // Query without strict orderBy to avoid unindexed errors on new databases
         onSnapshot(attendeesCollection, (snapshot) => {
             const listEl = document.getElementById('liveAttendeeList');
             const countEl = document.getElementById('attendeeCount');
@@ -163,7 +163,7 @@ window.copyInvite = function() {
 function fallbackCopyText(text) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
-    textArea.style.position = "fixed";  // Avoid scrolling to bottom
+    textArea.style.position = "fixed";
     textArea.style.top = "0";
     textArea.style.left = "0";
     document.body.appendChild(textArea);
