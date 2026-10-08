@@ -495,28 +495,38 @@ body {
     will-change: transform, opacity;
 }
 
-/* Optimize heavy visual effects for screens under 768px */
+/* =========================================================
+   MOBILE LAG FIX (Screens 768px and below)
+   ========================================================= */
+
 @media screen and (max-width: 768px) {
-    /* Hide continuous floating emojis to free up mobile CPU */
+    /* Reduce spotlight size and heavy blur filters to free GPU rendering */
+    .club-spotlight {
+        width: 260px;
+        height: 260px;
+        filter: blur(50px);
+        opacity: 0.35;
+        animation-duration: 12s; /* Slow down animation cycles on mobile */
+    }
+
+    /* Completely hide floating orbiting emojis on mobile to stop frame drops */
     .floating-emoji {
         display: none !important;
     }
 
-    /* Reduce intense filter blurs on mobile screens */
-    .club-spotlight {
-        filter: blur(40px) !important;
-        opacity: 0.35 !important;
-        animation: none !important; /* Stop background repaint loop */
-    }
-
+    /* Disable laser beam sweeps on mobile screens */
     .concert-laser {
-        display: none !important; /* Disable laser sweep loops on mobile */
+        display: none !important;
     }
 
-    /* Remove heavy shadows */
+    /* Simplify view panel transitions for instant rendering */
+    .view-panel {
+        animation: none !important;
+    }
+
+    /* Ensure card app container does not compute heavy backdrop shadows */
     .app-card {
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
 }
-
 
