@@ -1,8 +1,7 @@
-// Import Firebase functions directly via Google CDN links
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Your Firebase configuration keys
+// Your Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDHT50bejupdQbnGKeryXPmCD5J9fI3qkA",
   authDomain: "hangout-planner-29d48.firebaseapp.com",
@@ -13,7 +12,7 @@ const firebaseConfig = {
   measurementId: "G-75K6Z2DZVL"
 };
 
-// Initialize Firebase & Firestore Database
+// Initialize Firebase & Firestore
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const attendeesCollection = collection(db, "hangout_attendees");
@@ -40,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         runawayBtn.addEventListener('touchstart', moveBtn);
     }
 
-    // Start real-time squad listener
+    // Start Real-Time Firestore Listener
     listenToLiveAttendees();
 });
 
@@ -98,11 +97,11 @@ window.handlePlanSubmit = async function(event) {
     window.goToStep(3);
 };
 
+// Listen to Firestore real-time updates
 function listenToLiveAttendees() {
     try {
-        const q = query(attendeesCollection, orderBy("timestamp", "asc"));
-
-        onSnapshot(q, (snapshot) => {
+        // Query without strict orderBy to avoid unindexed errors on new databases
+        onSnapshot(attendeesCollection, (snapshot) => {
             const listEl = document.getElementById('liveAttendeeList');
             const countEl = document.getElementById('attendeeCount');
 
@@ -121,19 +120,24 @@ function listenToLiveAttendees() {
                 const data = doc.data();
                 html += `
                     <li>
-                        <span>✍️ <b>${data.name}</b></span>
-                        <span class="time-tag">📅 ${data.date} @ ${data.time}</span>
+                        <span>✍️ <b>${data.name || 'Anonymous'}</b></span>
+                        <span class="time-tag">📅 ${data.date || '--'} @ ${data.time || '--'}</span>
                     </li>
                 `;
             });
 
             listEl.innerHTML = html;
+        }, (error) => {
+            console.error("Firestore snapshot error:", error);
+            const listEl = document.getElementById('liveAttendeeList');
+            if (listEl) listEl.innerHTML = "<li>Unable to load live list. Check Firebase rules.</li>";
         });
     } catch (err) {
         console.log("Firebase listening standby:", err);
     }
 }
 
+// Mobile-Compatible Copy Action
 window.copyInvite = function() {
     const when = document.getElementById('ticketWhen') ? document.getElementById('ticketWhen').textContent : '';
     const time = document.getElementById('ticketTime') ? document.getElementById('ticketTime').textContent : '';
@@ -141,7 +145,39 @@ window.copyInvite = function() {
 
     const text = `🚫🔍 Hangout Plan — Live List Updated!\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nCheck out who's already signed on the live squad list! 🙅🏻‍♀️❌`;
 
-    navigator.clipboard.writeText(text).then(() => {
-        alert("Invite details copied to clipboard!");
-    });
+    // Modern Clipboard API with Mobile Fallback
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Invite details copied to clipboard!");
+        }).catch(() => {
+            fallbackCopyText(text);
+        });
+    } else {
+        fallbackCopyText(text);
+    }
 };
+
+// Fallback Copy Function for iOS / Android WebViews
+function fallbackCopyText(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";  // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            alert("Invite details copied to clipboard!");
+        } else {
+            alert("Copy failed. Please copy manually.");
+        }
+    } catch (err) {
+        alert("Copy failed. Please copy manually.");
+    }
+
+    document.body.removeChild(textArea);
+}
