@@ -63,10 +63,6 @@ window.selectVibe = function(element, vibeName) {
 
 window.handlePlanSubmit = async function(event) {
     event.preventDefault();
-    // Trigger haptic vibration on mobile devices
-    if (navigator.vibrate) {
-        navigator.vibrate([100, 50, 100]);
-    }
 
     const attendeeName = document.getElementById('attendeeNameInput').value.trim();
     const dateVal = document.getElementById('dateInput').value;
@@ -78,6 +74,7 @@ window.handlePlanSubmit = async function(event) {
         day: 'numeric'
     });
 
+    // 1. Update UI ticket elements instantly
     const elAttendee = document.getElementById('ticketAttendee');
     const elWhen = document.getElementById('ticketWhen');
     const elTime = document.getElementById('ticketTime');
@@ -88,19 +85,19 @@ window.handlePlanSubmit = async function(event) {
     if (elTime) elTime.textContent = timeVal;
     if (elVibe) elVibe.textContent = selectedVibeText;
 
-    try {
-        await addDoc(attendeesCollection, {
-            name: attendeeName,
-            date: formattedDate,
-            time: timeVal,
-            vibe: selectedVibeText,
-            timestamp: serverTimestamp()
-        });
-    } catch (error) {
-        console.error("Firebase write error:", error);
-    }
-
+    // 2. Switch view IMMEDIATELY for zero lag on mobile
     window.goToStep(3);
+
+    // 3. Save to Firestore in the background (non-blocking)
+    addDoc(attendeesCollection, {
+        name: attendeeName,
+        date: formattedDate,
+        time: timeVal,
+        vibe: selectedVibeText,
+        timestamp: serverTimestamp()
+    }).catch((error) => {
+        console.error("Firebase background write error:", error);
+    });
 };
 
 // Listen to Firestore real-time updates
@@ -260,11 +257,4 @@ document.addEventListener('DOMContentLoaded', () => {
     animate3D();
 });
 
-// const card = document.getElementById('appCard');
-// if (card && window.innerWidth > 768) {
-//     document.addEventListener('mousemove', (e) => {
-//         const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-//         const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-//         card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-//     });
-// }
+
