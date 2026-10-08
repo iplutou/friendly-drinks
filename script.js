@@ -46,23 +46,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // EXPOSE GLOBAL FUNCTIONS FOR HTML ATTR (ONCLICK)
 
-// Navigation between views
+// Instant View Switcher optimized for Mobile
 window.goToStep = function(stepNumber) {
-    document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
-    document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
+    // 1. Hide current views immediately
+    const panels = document.querySelectorAll('.view-panel');
+    const dots = document.querySelectorAll('.dot');
+    
+    panels.forEach(panel => panel.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
 
     const targetPanel = document.getElementById(`view${stepNumber}`);
     const targetDot = document.getElementById(`dot${stepNumber}`);
+
     if (targetPanel) targetPanel.classList.add('active');
     if (targetDot) targetDot.classList.add('active');
 
-    // Trigger Confetti when entering View 3
+    // 2. Defer heavy Confetti animation so it doesn't block view switching on mobile
     if (stepNumber === 3 && typeof confetti === 'function') {
-        confetti({
-            particleCount: 70,
-            spread: 60,
-            origin: { y: 0.6 }
-        });
+        setTimeout(() => {
+            confetti({
+                particleCount: 50, // Reduced count for mobile devices
+                spread: 50,
+                origin: { y: 0.6 }
+            });
+        }, 100); // 100ms delay allows the DOM to finish painting View 3 first
     }
 };
 
@@ -72,7 +79,6 @@ window.selectVibe = function(element, vibeName) {
     selectedVibeText = vibeName;
 };
 
-// INSTANT FORM SUBMISSION (FIXES MOBILE DELAY)
 window.handlePlanSubmit = function(event) {
     event.preventDefault();
 
@@ -86,25 +92,31 @@ window.handlePlanSubmit = function(event) {
         day: 'numeric'
     });
 
-    // 1. Update text content in DOM first
-    document.getElementById('ticketAttendee').textContent = attendeeName;
-    document.getElementById('ticketWhen').textContent = formattedDate;
-    document.getElementById('ticketTime').textContent = timeVal;
-    document.getElementById('ticketVibe').textContent = selectedVibeText;
+    // Update ticket text immediately
+    const elAttendee = document.getElementById('ticketAttendee');
+    const elWhen = document.getElementById('ticketWhen');
+    const elTime = document.getElementById('ticketTime');
+    const elVibe = document.getElementById('ticketVibe');
 
-    // 2. Switch page view IMMEDIATELY (0ms UI thread block)
+    if (elAttendee) elAttendee.textContent = attendeeName;
+    if (elWhen) elWhen.textContent = formattedDate;
+    if (elTime) elTime.textContent = timeVal;
+    if (elVibe) elVibe.textContent = selectedVibeText;
+
+    // STEP 1: SWITCH VIEW INSTANTLY
     window.goToStep(3);
 
-    // 3. Defer non-critical work (Firebase & Confetti) to next execution frame
+    // STEP 2: ASYNCHRONOUS FIREBASE WRITE (Non-blocking)
     setTimeout(() => {
-        // Save to Firestore silently in background
         addDoc(attendeesCollection, {
             name: attendeeName,
             date: formattedDate,
             time: timeVal,
             vibe: selectedVibeText,
             timestamp: serverTimestamp()
-        }).catch(err => console.error("Background write error:", err));
+        }).catch((error) => {
+            console.error("Firebase background sync error:", error);
+        });
     }, 50);
 };
 
