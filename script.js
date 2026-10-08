@@ -63,6 +63,10 @@ window.selectVibe = function(element, vibeName) {
 
 window.handlePlanSubmit = async function(event) {
     event.preventDefault();
+    // Trigger haptic vibration on mobile devices
+    if (navigator.vibrate) {
+        navigator.vibrate([100, 50, 100]);
+    }
 
     const attendeeName = document.getElementById('attendeeNameInput').value.trim();
     const dateVal = document.getElementById('dateInput').value;
@@ -183,3 +187,84 @@ function fallbackCopyText(text) {
 
     document.body.removeChild(textArea);
 }
+
+
+
+// Navigation between views with Confetti Trigger
+window.goToStep = function(stepNumber) {
+    document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
+    document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
+
+    const targetPanel = document.getElementById(`view${stepNumber}`);
+    const targetDot = document.getElementById(`dot${stepNumber}`);
+    if (targetPanel) targetPanel.classList.add('active');
+    if (targetDot) targetDot.classList.add('active');
+
+    // Trigger Confetti Celebration when entering View 3
+    if (stepNumber === 3 && typeof confetti === 'function') {
+        confetti({
+            particleCount: 120,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }
+};
+
+
+// =========================================================
+// 3D FLOATING PARTICLES ANIMATION
+// =========================================================
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('bg3dCanvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+
+    const particles = Array.from({ length: 45 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 3 + 1,
+        color: ['#6366f1', '#ec4899', '#a855f7', '#38bdf8'][Math.floor(Math.random() * 4)],
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: (Math.random() - 0.5) * 1.2
+    }));
+
+    function animate3D() {
+        ctx.clearRect(0, 0, width, height);
+
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = p.color;
+            ctx.fill();
+        });
+
+        requestAnimationFrame(animate3D);
+    }
+
+    animate3D();
+});
+
+// const card = document.getElementById('appCard');
+// if (card && window.innerWidth > 768) {
+//     document.addEventListener('mousemove', (e) => {
+//         const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+//         const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+//         card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+//     });
+// }
