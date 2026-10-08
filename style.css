@@ -408,3 +408,23 @@ body {
     color: #64748b;
     font-weight: 500;
 }
+
+
+/* =========================================================
+   MOBILE PERFORMANCE OPTIMIZATION (Fixes 45s Delay)
+   ========================================================= */
+
+@media screen and (max-width: 768px) {
+    /* Reduce spotlight blur load on mobile GPUs */
+    .club-spotlight {
+        width: 300px;
+        height: 300px;
+        filter: blur(70px);
+        opacity: 0.4;
+    }
+
+    /* Hide heavy floating emojis on mobile to eliminate UI lag */
+    .floating-emoji {
+        display: none;
+    }
+}
