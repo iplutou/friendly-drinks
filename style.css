@@ -425,20 +425,6 @@ body {
 }
 
 /* =========================================================
-   MOBILE PERFORMANCE OPTIMIZATIONS
-   ========================================================= */
-
-@media screen and (max-width: 768px) {
-    .club-spotlight { width: 300px; height: 300px; filter: blur(80px); opacity: 0.5; }
-    .floating-emoji { display: none; }
-}
-
-
-
-
-
-
-/* =========================================================
    BORN PINK CONCERT LASER BEAMS & STADIUM LIGHTING
    ========================================================= */
 
@@ -498,3 +484,39 @@ body {
     50% { transform: scale(1.25); opacity: 0.8; }
     100% { transform: scale(0.95); opacity: 0.5; }
 }
+
+/* =========================================================
+   HARDWARE ACCELERATION & MOBILE RENDER FIX
+   ========================================================= */
+
+/* Force GPU rendering for smooth step transitions */
+.app-card, .view-panel {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+}
+
+/* Optimize heavy visual effects for screens under 768px */
+@media screen and (max-width: 768px) {
+    /* Hide continuous floating emojis to free up mobile CPU */
+    .floating-emoji {
+        display: none !important;
+    }
+
+    /* Reduce intense filter blurs on mobile screens */
+    .club-spotlight {
+        filter: blur(40px) !important;
+        opacity: 0.35 !important;
+        animation: none !important; /* Stop background repaint loop */
+    }
+
+    .concert-laser {
+        display: none !important; /* Disable laser sweep loops on mobile */
+    }
+
+    /* Remove heavy shadows */
+    .app-card {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+    }
+}
+
+
