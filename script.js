@@ -20,7 +20,7 @@ const attendeesCollection = collection(db, "hangout_attendees");
 let selectedVibeText = "Gathering at Home for Cooking Dinner 🍳";
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Set default date to tomorrow
+    // Default date setup
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const dateInput = document.getElementById('dateInput');
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // EXPOSE GLOBAL FUNCTIONS FOR HTML ATTR (ONCLICK)
 
-// Navigation between views with Confetti Trigger
+// Navigation between views
 window.goToStep = function(stepNumber) {
     document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
     document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
@@ -56,10 +56,10 @@ window.goToStep = function(stepNumber) {
     if (targetPanel) targetPanel.classList.add('active');
     if (targetDot) targetDot.classList.add('active');
 
-    // Trigger Confetti Celebration when entering View 3
+    // Trigger Confetti when entering View 3
     if (stepNumber === 3 && typeof confetti === 'function') {
         confetti({
-            particleCount: 80,
+            particleCount: 70,
             spread: 60,
             origin: { y: 0.6 }
         });
@@ -72,6 +72,7 @@ window.selectVibe = function(element, vibeName) {
     selectedVibeText = vibeName;
 };
 
+// INSTANT FORM SUBMISSION (FIXES MOBILE DELAY)
 window.handlePlanSubmit = function(event) {
     event.preventDefault();
 
@@ -85,7 +86,7 @@ window.handlePlanSubmit = function(event) {
         day: 'numeric'
     });
 
-    // 1. Update UI ticket elements instantly
+    // 1. Update ticket card fields immediately
     const elAttendee = document.getElementById('ticketAttendee');
     const elWhen = document.getElementById('ticketWhen');
     const elTime = document.getElementById('ticketTime');
@@ -96,10 +97,10 @@ window.handlePlanSubmit = function(event) {
     if (elTime) elTime.textContent = timeVal;
     if (elVibe) elVibe.textContent = selectedVibeText;
 
-    // 2. Switch view IMMEDIATELY for zero lag on mobile
+    // 2. SWITCH VIEW INSTANTLY (0ms delay)
     window.goToStep(3);
 
-    // 3. Save to Firestore asynchronously in background (non-blocking)
+    // 3. Save to Firestore in background asynchronously (non-blocking)
     addDoc(attendeesCollection, {
         name: attendeeName,
         date: formattedDate,
@@ -143,7 +144,7 @@ function listenToLiveAttendees() {
         }, (error) => {
             console.error("Firestore snapshot error:", error);
             const listEl = document.getElementById('liveAttendeeList');
-            if (listEl) listEl.innerHTML = "<li>Unable to load live list. Check Firebase rules.</li>";
+            if (listEl) listEl.innerHTML = "<li>Unable to load live list.</li>";
         });
     } catch (err) {
         console.log("Firebase listening standby:", err);
@@ -159,7 +160,6 @@ window.copyInvite = function() {
 
     const text = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n✍️ Confirmed By (Proof): ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌`;
 
-    // Modern Clipboard API with Mobile Fallback
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
             alert("Invite details copied to clipboard!");
@@ -171,7 +171,6 @@ window.copyInvite = function() {
     }
 };
 
-// Fallback Copy Function for Mobile WebViews & iOS Safari
 function fallbackCopyText(text) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
