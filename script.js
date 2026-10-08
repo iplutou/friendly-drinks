@@ -86,30 +86,26 @@ window.handlePlanSubmit = function(event) {
         day: 'numeric'
     });
 
-    // 1. Update ticket card fields immediately
-    const elAttendee = document.getElementById('ticketAttendee');
-    const elWhen = document.getElementById('ticketWhen');
-    const elTime = document.getElementById('ticketTime');
-    const elVibe = document.getElementById('ticketVibe');
+    // 1. Update text content in DOM first
+    document.getElementById('ticketAttendee').textContent = attendeeName;
+    document.getElementById('ticketWhen').textContent = formattedDate;
+    document.getElementById('ticketTime').textContent = timeVal;
+    document.getElementById('ticketVibe').textContent = selectedVibeText;
 
-    if (elAttendee) elAttendee.textContent = attendeeName;
-    if (elWhen) elWhen.textContent = formattedDate;
-    if (elTime) elTime.textContent = timeVal;
-    if (elVibe) elVibe.textContent = selectedVibeText;
-
-    // 2. SWITCH VIEW INSTANTLY (0ms delay)
+    // 2. Switch page view IMMEDIATELY (0ms UI thread block)
     window.goToStep(3);
 
-    // 3. Save to Firestore in background asynchronously (non-blocking)
-    addDoc(attendeesCollection, {
-        name: attendeeName,
-        date: formattedDate,
-        time: timeVal,
-        vibe: selectedVibeText,
-        timestamp: serverTimestamp()
-    }).catch((error) => {
-        console.error("Firebase background write error:", error);
-    });
+    // 3. Defer non-critical work (Firebase & Confetti) to next execution frame
+    setTimeout(() => {
+        // Save to Firestore silently in background
+        addDoc(attendeesCollection, {
+            name: attendeeName,
+            date: formattedDate,
+            time: timeVal,
+            vibe: selectedVibeText,
+            timestamp: serverTimestamp()
+        }).catch(err => console.error("Background write error:", err));
+    }, 50);
 };
 
 // Listen to Firestore real-time updates
