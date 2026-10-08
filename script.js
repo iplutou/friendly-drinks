@@ -171,7 +171,7 @@ window.copyInvite = function() {
     // Try modern Clipboard API
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(textToCopy).then(() => {
-            alert("Invite details copied to clipboard!");
+            alert("💌 Invite details copied to clipboard!");
         }).catch(() => {
             executeMobileCopy(textToCopy);
         });
@@ -216,7 +216,7 @@ function executeMobileCopy(text) {
     try {
         const successful = document.execCommand('copy');
         if (successful) {
-            alert("Invite details copied to clipboard!");
+            alert("💌 Invite details copied to clipboard!");
         } else {
             alert("Copy failed. Please copy manually.");
         }
