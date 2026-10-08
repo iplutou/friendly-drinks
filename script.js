@@ -1,17 +1,19 @@
+// Import Firebase functions directly via Google CDN links
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// 1. YOUR REAL FIREBASE KEYS
+// Your Firebase configuration keys
 const firebaseConfig = {
-    apiKey: "AIzaSyDHT50bejupdQbnGKeryXPmCD5J9fI3qkA",
-    authDomain: "hangout-planner-29d48.firebaseapp.com",
-    projectId: "hangout-planner-29d48",
-    storageBucket: "hangout-planner-29d48.firebasestorage.app",
-    messagingSenderId: "1020974558315",
-    appId: "1:1020974558315:web:72725b6eb6be948a9d952e"
+  apiKey: "AIzaSyDHT50bejupdQbnGKeryXPmCD5J9fI3qkA",
+  authDomain: "hangout-planner-29d48.firebaseapp.com",
+  projectId: "hangout-planner-29d48",
+  storageBucket: "hangout-planner-29d48.firebasestorage.app",
+  messagingSenderId: "1020974558315",
+  appId: "1:1020974558315:web:72725b6eb6be948a9d952e",
+  measurementId: "G-75K6Z2DZVL"
 };
 
-// Initialize Firebase
+// Initialize Firebase & Firestore Database
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const attendeesCollection = collection(db, "hangout_attendees");
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         runawayBtn.addEventListener('touchstart', moveBtn);
     }
 
-    // Start real-time Firestore listener
+    // Start real-time squad listener
     listenToLiveAttendees();
 });
 
@@ -90,7 +92,7 @@ window.handlePlanSubmit = async function(event) {
             timestamp: serverTimestamp()
         });
     } catch (error) {
-        console.error("Firebase write notice:", error);
+        console.error("Firebase write error:", error);
     }
 
     window.goToStep(3);
@@ -137,7 +139,7 @@ window.copyInvite = function() {
     const time = document.getElementById('ticketTime') ? document.getElementById('ticketTime').textContent : '';
     const vibe = document.getElementById('ticketVibe') ? document.getElementById('ticketVibe').textContent : '';
 
-    const text = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n✍️ Confirmed By (Proof): ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌`;
+    const text = `🚫🔍 Hangout Plan — Live List Updated!\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nCheck out who's already signed on the live squad list! 🙅🏻‍♀️❌`;
 
     navigator.clipboard.writeText(text).then(() => {
         alert("Invite details copied to clipboard!");
