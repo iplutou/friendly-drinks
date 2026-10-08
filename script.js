@@ -74,7 +74,7 @@ window.handlePlanSubmit = async function(event) {
         day: 'numeric'
     });
 
-    // 1. Update UI ticket elements instantly
+    // 1. Update ticket card fields instantly
     const elAttendee = document.getElementById('ticketAttendee');
     const elWhen = document.getElementById('ticketWhen');
     const elTime = document.getElementById('ticketTime');
@@ -88,7 +88,7 @@ window.handlePlanSubmit = async function(event) {
     // 2. Switch view IMMEDIATELY for zero lag on mobile
     window.goToStep(3);
 
-    // 3. Save to Firestore in the background (non-blocking)
+    // 3. Save to Firebase asynchronously in the background
     addDoc(attendeesCollection, {
         name: attendeeName,
         date: formattedDate,
@@ -96,7 +96,7 @@ window.handlePlanSubmit = async function(event) {
         vibe: selectedVibeText,
         timestamp: serverTimestamp()
     }).catch((error) => {
-        console.error("Firebase background write error:", error);
+        console.error("Background sync error:", error);
     });
 };
 
@@ -256,5 +256,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     animate3D();
 });
-
-
