@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -20,6 +20,7 @@ const attendeesCollection = collection(db, "hangout_attendees");
 let selectedVibeText = "Gathering at Home for Cooking Dinner 🍳";
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Set default date to tomorrow
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const dateInput = document.getElementById('dateInput');
@@ -36,15 +37,16 @@ document.addEventListener('DOMContentLoaded', () => {
             runawayBtn.style.transform = `translate(${x}px, ${y}px)`;
         };
         runawayBtn.addEventListener('mouseover', moveBtn);
-        runawayBtn.addEventListener('touchstart', moveBtn);
+        runawayBtn.addEventListener('touchstart', moveBtn, { passive: true });
     }
 
     // Start Real-Time Firestore Listener
     listenToLiveAttendees();
 });
 
-// EXPOSE FUNCTIONS GLOBALLY FOR HTML ONCLICK ATTRIBUTES:
+// EXPOSE GLOBAL FUNCTIONS FOR HTML ATTR (ONCLICK)
 
+// Navigation between views with Confetti Trigger
 window.goToStep = function(stepNumber) {
     document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
     document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
@@ -53,6 +55,15 @@ window.goToStep = function(stepNumber) {
     const targetDot = document.getElementById(`dot${stepNumber}`);
     if (targetPanel) targetPanel.classList.add('active');
     if (targetDot) targetDot.classList.add('active');
+
+    // Trigger Confetti Celebration when entering View 3
+    if (stepNumber === 3 && typeof confetti === 'function') {
+        confetti({
+            particleCount: 80,
+            spread: 60,
+            origin: { y: 0.6 }
+        });
+    }
 };
 
 window.selectVibe = function(element, vibeName) {
@@ -61,7 +72,7 @@ window.selectVibe = function(element, vibeName) {
     selectedVibeText = vibeName;
 };
 
-window.handlePlanSubmit = async function(event) {
+window.handlePlanSubmit = function(event) {
     event.preventDefault();
 
     const attendeeName = document.getElementById('attendeeNameInput').value.trim();
@@ -88,7 +99,7 @@ window.handlePlanSubmit = async function(event) {
     // 2. Switch view IMMEDIATELY for zero lag on mobile
     window.goToStep(3);
 
-    // 3. Save to Firestore in the background (non-blocking)
+    // 3. Save to Firestore asynchronously in background (non-blocking)
     addDoc(attendeesCollection, {
         name: attendeeName,
         date: formattedDate,
@@ -160,7 +171,7 @@ window.copyInvite = function() {
     }
 };
 
-// Fallback Copy Function for iOS / Android WebViews
+// Fallback Copy Function for Mobile WebViews & iOS Safari
 function fallbackCopyText(text) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
@@ -184,75 +195,3 @@ function fallbackCopyText(text) {
 
     document.body.removeChild(textArea);
 }
-
-
-
-// Navigation between views with Confetti Trigger
-window.goToStep = function(stepNumber) {
-    document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
-    document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
-
-    const targetPanel = document.getElementById(`view${stepNumber}`);
-    const targetDot = document.getElementById(`dot${stepNumber}`);
-    if (targetPanel) targetPanel.classList.add('active');
-    if (targetDot) targetDot.classList.add('active');
-
-    // Trigger Confetti Celebration when entering View 3
-    if (stepNumber === 3 && typeof confetti === 'function') {
-        confetti({
-            particleCount: 120,
-            spread: 70,
-            origin: { y: 0.6 }
-        });
-    }
-};
-
-
-// =========================================================
-// 3D FLOATING PARTICLES ANIMATION
-// =========================================================
-document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('bg3dCanvas');
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-
-    window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    });
-
-    const particles = Array.from({ length: 45 }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: Math.random() * 3 + 1,
-        color: ['#6366f1', '#ec4899', '#a855f7', '#38bdf8'][Math.floor(Math.random() * 4)],
-        vx: (Math.random() - 0.5) * 1.2,
-        vy: (Math.random() - 0.5) * 1.2
-    }));
-
-    function animate3D() {
-        ctx.clearRect(0, 0, width, height);
-
-        particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-
-            if (p.x < 0 || p.x > width) p.vx *= -1;
-            if (p.y < 0 || p.y > height) p.vy *= -1;
-
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = p.color;
-            ctx.fill();
-        });
-
-        requestAnimationFrame(animate3D);
-    }
-
-    animate3D();
-});
