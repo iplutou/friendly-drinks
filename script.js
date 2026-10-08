@@ -159,7 +159,7 @@ function listenToLiveAttendees() {
     }
 }
 
-// Mobile-Compatible Copy Action (iOS Safari & Android Ready)
+// Mobile & Desktop Compatible Copy Action
 window.copyInvite = function() {
     const attendee = document.getElementById('ticketAttendee') ? document.getElementById('ticketAttendee').textContent.trim() : '';
     const when = document.getElementById('ticketWhen') ? document.getElementById('ticketWhen').textContent.trim() : '';
@@ -168,24 +168,24 @@ window.copyInvite = function() {
 
     const textToCopy = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n✍️ Confirmed By (Proof): ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌`;
 
-    // Try standard Web Clipboard API first
+    // Try modern Clipboard API
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(textToCopy).then(() => {
-            alert("💌 Invite details copied to clipboard!");
+            alert("Invite details copied to clipboard!");
         }).catch(() => {
-            mobileFallbackCopy(textToCopy);
+            executeMobileCopy(textToCopy);
         });
     } else {
-        mobileFallbackCopy(textToCopy);
+        executeMobileCopy(textToCopy);
     }
 };
 
-// Robust Fallback Copy for iOS Safari, WebViews, and HTTP pages
-function mobileFallbackCopy(text) {
+// Robust Fallback Copy designed for Mobile Safari & Android Chrome
+function executeMobileCopy(text) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
     
-    // Prevent iOS keyboard pop-up and scrolling glitches
+    // Prevent iOS viewport jumping or opening virtual keyboard
     textArea.style.position = "fixed";
     textArea.style.top = "0";
     textArea.style.left = "0";
@@ -200,7 +200,7 @@ function mobileFallbackCopy(text) {
 
     document.body.appendChild(textArea);
 
-    // iOS Safari selection range selection fix
+    // iOS Safari selection range fix
     if (navigator.userAgent.match(/ipad|iphone/i)) {
         const range = document.createRange();
         range.selectNodeContents(textArea);
@@ -209,13 +209,14 @@ function mobileFallbackCopy(text) {
         selection.addRange(range);
         textArea.setSelectionRange(0, 999999);
     } else {
+        textArea.focus();
         textArea.select();
     }
 
     try {
         const successful = document.execCommand('copy');
         if (successful) {
-            alert("💌 Invite details copied to clipboard!");
+            alert("Invite details copied to clipboard!");
         } else {
             alert("Copy failed. Please copy manually.");
         }
