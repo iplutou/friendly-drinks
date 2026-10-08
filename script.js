@@ -74,6 +74,7 @@ window.handlePlanSubmit = async function(event) {
         day: 'numeric'
     });
 
+    const elAttendee = document.getElementById('ticketAttendee');
     const elWhen = document.getElementById('ticketWhen');
     const elTime = document.getElementById('ticketTime');
     const elVibe = document.getElementById('ticketVibe');
@@ -139,11 +140,12 @@ function listenToLiveAttendees() {
 
 // Mobile-Compatible Copy Action
 window.copyInvite = function() {
+    const attendee = document.getElementById('ticketAttendee') ? document.getElementById('ticketAttendee').textContent : '';
     const when = document.getElementById('ticketWhen') ? document.getElementById('ticketWhen').textContent : '';
     const time = document.getElementById('ticketTime') ? document.getElementById('ticketTime').textContent : '';
     const vibe = document.getElementById('ticketVibe') ? document.getElementById('ticketVibe').textContent : '';
 
-    const text = `🚫🔍 Hangout Plan — Live List Updated!\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nCheck out who's already signed on the live squad list! 🙅🏻‍♀️❌`;
+    const text = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n✍️ Confirmed By (Proof): ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌`;
 
     // Modern Clipboard API with Mobile Fallback
     if (navigator.clipboard && navigator.clipboard.writeText) {
