@@ -8,95 +8,114 @@
 }
 
 body {
-    background-color: #0f172a;
-    background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                      radial-gradient(at 100% 100%, hsla(225,39%,25%,1) 0, transparent 50%);
+    background-color: #080a10;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 1.25rem;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
-.full-width {
-    width: 100%;
-    margin-bottom: 1.25rem;
-}
+/* =========================================================
+   NIGHTCLUB DISCO LIGHTS / SPOTLIGHTS
+   ========================================================= */
 
-.live-list-box {
-    width: 100%;
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    border-radius: 1.25rem;
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
-}
-
-.live-list-title {
-    font-size: 0.85rem;
-    font-weight: 800;
-    color: #334155;
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-}
-
-.attendee-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.attendee-list li {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.75rem;
-    padding: 0.6rem 0.85rem;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #0f172a;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.attendee-list li .time-tag {
-    font-size: 0.7rem;
-    color: #64748b;
-    font-weight: 500;
-}
-
-.bg-blob {
+.club-spotlight {
     position: absolute;
-    width: 320px;
-    height: 320px;
+    width: 500px;
+    height: 500px;
     border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.4;
+    filter: blur(110px);
+    opacity: 0.6;
     z-index: 1;
+    pointer-events: none;
+    animation: spotlightMoving 9s infinite alternate ease-in-out;
 }
-.blob-1 { background: #6366f1; top: -10%; left: -10%; }
-.blob-2 { background: #ec4899; bottom: -10%; right: -10%; }
+
+.spot-pink {
+    background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,0) 70%);
+    top: -20%;
+    left: -10%;
+}
+
+.spot-purple {
+    background: radial-gradient(circle, #a855f7 0%, rgba(168,85,247,0) 70%);
+    bottom: -20%;
+    right: -10%;
+    animation-delay: -3s;
+}
+
+.spot-blue {
+    background: radial-gradient(circle, #38bdf8 0%, rgba(56,189,248,0) 70%);
+    top: 35%;
+    right: 25%;
+    animation-delay: -6s;
+}
+
+@keyframes spotlightMoving {
+    0% { transform: translate(0px, 0px) scale(1) rotate(0deg); opacity: 0.5; }
+    50% { transform: translate(70px, -60px) scale(1.25) rotate(180deg); opacity: 0.8; }
+    100% { transform: translate(-50px, 50px) scale(0.9) rotate(360deg); opacity: 0.5; }
+}
+
+/* =========================================================
+   ANIMATED MOVING EMOJIS (FLAGS, RAINBOW, DRINKS, HEARTS)
+   ========================================================= */
+
+.floating-emoji {
+    position: absolute;
+    font-size: 2.2rem;
+    z-index: 2;
+    user-select: none;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    animation: emojiFloat 7s infinite ease-in-out;
+}
+
+.float-1  { top: 6%;  left: 6%;  animation-duration: 6.2s; }
+.float-2  { top: 12%; right: 8%; animation-duration: 7.8s; animation-delay: -1s; }
+.float-3  { top: 22%; left: 14%; animation-duration: 8.5s; animation-delay: -2s; }
+.float-4  { top: 28%; right: 12%; animation-duration: 6.9s; animation-delay: -0.5s; }
+.float-5  { top: 48%; left: 3%;  animation-duration: 9.1s; animation-delay: -3s; }
+.float-6  { top: 52%; right: 3%; animation-duration: 7.2s; animation-delay: -4s; }
+.float-7  { bottom: 18%; left: 12%; animation-duration: 6.7s; animation-delay: -1.5s; }
+.float-8  { bottom: 22%; right: 14%; animation-duration: 8.1s; animation-delay: -2.5s; }
+.float-9  { bottom: 6%;  left: 6%;  animation-duration: 7.4s; animation-delay: -3.5s; }
+.float-10 { bottom: 8%;  right: 8%; animation-duration: 6.5s; animation-delay: -0.8s; }
+.float-11 { top: 75%; left: 2%;  animation-duration: 8.8s; animation-delay: -2.2s; }
+.float-12 { top: 78%; right: 2%; animation-duration: 7.1s; animation-delay: -1.8s; }
+.float-13 { top: 2%;  left: 45%; animation-duration: 9.5s; animation-delay: -4.2s; }
+.float-14 { bottom: 2%; left: 45%; animation-duration: 6.8s; animation-delay: -3.1s; }
+.float-15 { top: 40%; left: 8%;  animation-duration: 8.2s; animation-delay: -1.2s; }
+
+@keyframes emojiFloat {
+    0%   { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); }
+    25%  { transform: translateY(-18px) translateX(12px) rotate(12deg) scale(1.12); }
+    50%  { transform: translateY(-32px) translateX(-12px) rotate(-12deg) scale(1.22); }
+    75%  { transform: translateY(-16px) translateX(16px) rotate(6deg) scale(1.08); }
+    100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); }
+}
+
+/* =========================================================
+   MAIN APP CARD & STEP TRANSITIONS
+   ========================================================= */
 
 .app-card {
     position: relative;
     z-index: 10;
     width: 100%;
     max-width: 440px;
-    background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: #ffffff;
     border-radius: 2.2rem;
     padding: 2.25rem 2rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.65);
 }
 
 .step-dots {
     display: flex;
     gap: 0.4rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 .dot {
     width: 8px;
@@ -114,14 +133,70 @@ body {
     display: none;
     flex-direction: column;
     align-items: flex-start;
-    animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .view-panel.active { display: flex; }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* =========================================================
+   CARTOON / STICKMAN HEADERS
+   ========================================================= */
+
+.cartoon-stage {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+}
+
+.cartoon-character {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+.cartoon-bubble {
+    background: #4f46e5;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.4rem 0.85rem;
+    border-radius: 1rem;
+    border-bottom-left-radius: 0.2rem;
+}
+
+.bounce-character { animation: cartoonBounce 1.8s infinite ease-in-out; }
+.wiggle-character { animation: cartoonWiggle 1.2s infinite ease-in-out; }
+
+.party-dance-1 { animation: danceLeft 0.8s infinite alternate ease-in-out; }
+.party-dance-2 { animation: danceRight 0.8s infinite alternate ease-in-out; animation-delay: 0.2s; }
+
+@keyframes cartoonBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes cartoonWiggle {
+    0%, 100% { transform: rotate(-6deg); }
+    50% { transform: rotate(6deg); }
+}
+
+@keyframes danceLeft {
+    0% { transform: translateY(0) rotate(-10deg); }
+    100% { transform: translateY(-8px) rotate(10deg); }
+}
+
+@keyframes danceRight {
+    0% { transform: translateY(-6px) rotate(10deg); }
+    100% { transform: translateY(2px) rotate(-10deg); }
+}
+
+/* =========================================================
+   FORM & CONTENT STYLES
+   ========================================================= */
 
 .badge-pill {
     display: inline-block;
@@ -131,36 +206,35 @@ body {
     color: #4338ca;
     font-size: 0.75rem;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
-.badge-success {
-    background: #d1fae5;
-    color: #065f46;
-}
+.badge-success { background: #d1fae5; color: #065f46; }
 
 .headline {
-    font-size: 1.65rem;
+    font-size: 1.55rem;
     font-weight: 800;
     color: #0f172a;
     line-height: 1.25;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.5rem;
     text-align: left;
 }
 
 .subtext {
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     color: #64748b;
-    line-height: 1.5;
-    margin-bottom: 1.75rem;
+    line-height: 1.45;
+    margin-bottom: 1.25rem;
     text-align: left;
 }
+
+.full-width { width: 100%; margin-bottom: 1rem; }
 
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
     width: 100%;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
 }
 
 .input-field {
@@ -173,15 +247,15 @@ body {
     font-weight: 800;
     color: #94a3b8;
     letter-spacing: 0.05em;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.35rem;
 }
 
 .input-field input {
-    padding: 0.8rem 0.9rem;
-    border-radius: 0.9rem;
+    padding: 0.75rem 0.85rem;
+    border-radius: 0.85rem;
     border: 1.5px solid #e2e8f0;
     background: #f8fafc;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 700;
     color: #0f172a;
     outline: none;
@@ -191,44 +265,38 @@ body {
 .vibe-selector {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.65rem;
+    gap: 0.6rem;
     width: 100%;
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.5rem;
 }
 
 .vibe-chip {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.85rem 0.85rem;
-    border-radius: 1rem;
+    padding: 0.75rem 0.75rem;
+    border-radius: 0.9rem;
     border: 1.5px solid #f1f5f9;
     background: #f8fafc;
     cursor: pointer;
     transition: all 0.2s ease;
 }
-.vibe-chip .chip-emoji { font-size: 1.2rem; flex-shrink: 0; }
-.vibe-chip .chip-text { font-size: 0.82rem; font-weight: 700; color: #334155; line-height: 1.25; text-align: left; }
-
-.vibe-chip:hover { border-color: #cbd5e1; background: #fff; }
-.vibe-chip.active {
-    border-color: #4f46e5;
-    background: #eeefff;
-}
+.vibe-chip .chip-emoji { font-size: 1.15rem; flex-shrink: 0; }
+.vibe-chip .chip-text { font-size: 0.8rem; font-weight: 700; color: #334155; line-height: 1.2; text-align: left; }
+.vibe-chip.active { border-color: #4f46e5; background: #eeefff; }
 
 .button-stage {
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
     width: 100%;
-    position: relative;
 }
 
 .btn {
     width: 100%;
-    padding: 0.95rem 1.25rem;
-    border-radius: 1rem;
-    font-size: 0.95rem;
+    padding: 0.9rem 1.25rem;
+    border-radius: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
     border: none;
     cursor: pointer;
@@ -240,26 +308,20 @@ body {
     color: #ffffff;
     box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
 }
-.btn-primary:hover {
-    background: #4338ca;
-    transform: translateY(-1px);
-}
+.btn-primary:hover { background: #4338ca; }
 
-.btn-ghost {
-    background: transparent;
-    color: #64748b;
-}
+.btn-ghost { background: transparent; color: #64748b; }
 
 .ticket-card {
     width: 100%;
     background: #f8fafc;
     border: 1.5px dashed #cbd5e1;
-    border-radius: 1.25rem;
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
+    border-radius: 1.1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 0.65rem;
 }
 
 .ticket-row {
@@ -268,5 +330,81 @@ body {
     align-items: center;
     gap: 0.5rem;
 }
-.ticket-label { font-size: 0.7rem; font-weight: 800; color: #94a3b8; flex-shrink: 0; }
-.ticket-value { font-size: 0.85rem; font-weight: 700; color: #0f172a; text-align: right; }
+.ticket-label { font-size: 0.68rem; font-weight: 800; color: #94a3b8; }
+.ticket-value { font-size: 0.82rem; font-weight: 700; color: #0f172a; text-align: right; }
+
+/* =========================================================
+   SCROLLABLE LIVE CONFIRMED SQUAD LIST (EXACTLY ~4 VISIBLE)
+   ========================================================= */
+
+.live-list-box {
+    width: 100%;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 1.1rem;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    
+    /* FIX: Restrict the box height & enable internal scrolling inside the box */
+    max-height: 220px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Custom Smooth Scrollbar inside the Live Squad Box */
+.live-list-box::-webkit-scrollbar {
+    width: 6px;
+}
+.live-list-box::-webkit-scrollbar-track {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+.live-list-box::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 10px;
+}
+.live-list-box::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+
+/* Height fitted to show ~4 attendee cards cleanly */
+.attendee-scroll-area {
+    max-height: 185px;
+    overflow-y: auto;
+    padding-right: 0.2rem;
+}
+
+.attendee-scroll-area::-webkit-scrollbar {
+    width: 5px;
+}
+.attendee-scroll-area::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.attendee-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.attendee-list li {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.65rem;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.attendee-list li .time-tag {
+    font-size: 0.68rem;
+    color: #64748b;
+    font-weight: 500;
+}
