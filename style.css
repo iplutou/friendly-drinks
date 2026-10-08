@@ -8,7 +8,7 @@
 }
 
 body {
-    background-color: #080a10;
+    background-color: #050508;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -19,45 +19,45 @@ body {
 }
 
 /* =========================================================
-   NIGHTCLUB DISCO LIGHTS / SPOTLIGHTS
+   BORN PINK CONCERT LASER & SPOTLIGHT BACKGROUND ANIMATION
    ========================================================= */
 
 .club-spotlight {
     position: absolute;
-    width: 500px;
-    height: 500px;
+    width: 600px;
+    height: 600px;
     border-radius: 50%;
-    filter: blur(110px);
-    opacity: 0.6;
+    filter: blur(130px);
+    opacity: 0.65;
     z-index: 1;
     pointer-events: none;
-    animation: spotlightMoving 9s infinite alternate ease-in-out;
+    animation: concertBeam 8s infinite alternate ease-in-out;
 }
 
 .spot-pink {
-    background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,0) 70%);
-    top: -20%;
-    left: -10%;
+    background: radial-gradient(circle, #ff1493 0%, rgba(255,20,147,0) 70%);
+    top: -25%;
+    left: -15%;
 }
 
 .spot-purple {
-    background: radial-gradient(circle, #a855f7 0%, rgba(168,85,247,0) 70%);
-    bottom: -20%;
-    right: -10%;
+    background: radial-gradient(circle, #db2777 0%, rgba(219,39,119,0) 70%);
+    bottom: -25%;
+    right: -15%;
     animation-delay: -3s;
 }
 
 .spot-blue {
-    background: radial-gradient(circle, #38bdf8 0%, rgba(56,189,248,0) 70%);
-    top: 35%;
-    right: 25%;
-    animation-delay: -6s;
+    background: radial-gradient(circle, #f43f5e 0%, rgba(244,63,94,0) 70%);
+    top: 30%;
+    right: 20%;
+    animation-delay: -5s;
 }
 
-@keyframes spotlightMoving {
-    0% { transform: translate(0px, 0px) scale(1) rotate(0deg); opacity: 0.5; }
-    50% { transform: translate(70px, -60px) scale(1.25) rotate(180deg); opacity: 0.8; }
-    100% { transform: translate(-50px, 50px) scale(0.9) rotate(360deg); opacity: 0.5; }
+@keyframes concertBeam {
+    0% { transform: translate(0px, 0px) scale(1) rotate(0deg); opacity: 0.6; }
+    50% { transform: translate(60px, -50px) scale(1.3) rotate(180deg); opacity: 0.85; }
+    100% { transform: translate(-40px, 40px) scale(0.95) rotate(360deg); opacity: 0.6; }
 }
 
 /* =========================================================
@@ -69,7 +69,7 @@ body {
     font-size: 2.2rem;
     z-index: 2;
     user-select: none;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    filter: drop-shadow(0 0 10px rgba(255, 192, 203, 0.6));
     animation: emojiFloat 7s infinite ease-in-out;
 }
 
@@ -98,7 +98,7 @@ body {
 }
 
 /* =========================================================
-   MAIN APP CARD & STEP TRANSITIONS
+   BABY PINK APP CARD CONTAINER
    ========================================================= */
 
 .app-card {
@@ -106,10 +106,11 @@ body {
     z-index: 10;
     width: 100%;
     max-width: 440px;
-    background: #ffffff;
+    background: #fff1f5; /* BABY PINK */
+    border: 2px solid #fbcfe8;
     border-radius: 2.2rem;
     padding: 2.25rem 2rem;
-    box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.65);
+    box-shadow: 0 25px 60px -12px rgba(236, 72, 153, 0.4);
 }
 
 .step-dots {
@@ -121,29 +122,29 @@ body {
     width: 8px;
     height: 8px;
     border-radius: 99px;
-    background-color: #cbd5e1;
+    background-color: #f472b6;
     transition: all 0.3s ease;
 }
 .dot.active {
     width: 24px;
-    background-color: #4f46e5;
+    background-color: #db2777;
 }
 
 .view-panel {
     display: none;
     flex-direction: column;
     align-items: flex-start;
-    animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .view-panel.active { display: flex; }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 /* =========================================================
-   CARTOON / STICKMAN HEADERS
+   CARTOON HEADERS
    ========================================================= */
 
 .cartoon-stage {
@@ -153,13 +154,10 @@ body {
     margin-bottom: 0.85rem;
 }
 
-.cartoon-character {
-    font-size: 2.2rem;
-    line-height: 1;
-}
+.cartoon-character { font-size: 2.2rem; line-height: 1; }
 
 .cartoon-bubble {
-    background: #4f46e5;
+    background: linear-gradient(135deg, #000000 0%, #db2777 100%);
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 800;
@@ -170,7 +168,6 @@ body {
 
 .bounce-character { animation: cartoonBounce 1.8s infinite ease-in-out; }
 .wiggle-character { animation: cartoonWiggle 1.2s infinite ease-in-out; }
-
 .party-dance-1 { animation: danceLeft 0.8s infinite alternate ease-in-out; }
 .party-dance-2 { animation: danceRight 0.8s infinite alternate ease-in-out; animation-delay: 0.2s; }
 
@@ -178,17 +175,14 @@ body {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
-
 @keyframes cartoonWiggle {
     0%, 100% { transform: rotate(-6deg); }
     50% { transform: rotate(6deg); }
 }
-
 @keyframes danceLeft {
     0% { transform: translateY(0) rotate(-10deg); }
     100% { transform: translateY(-8px) rotate(10deg); }
 }
-
 @keyframes danceRight {
     0% { transform: translateY(-6px) rotate(10deg); }
     100% { transform: translateY(2px) rotate(-10deg); }
@@ -202,18 +196,18 @@ body {
     display: inline-block;
     padding: 0.35rem 0.85rem;
     border-radius: 99px;
-    background: #e0e7ff;
-    color: #4338ca;
+    background: #fce7f3;
+    color: #be185d;
     font-size: 0.75rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
 }
-.badge-success { background: #d1fae5; color: #065f46; }
+.badge-success { background: #dcfce7; color: #166534; }
 
 .headline {
     font-size: 1.55rem;
     font-weight: 800;
-    color: #0f172a;
+    color: #831843;
     line-height: 1.25;
     margin-bottom: 0.5rem;
     text-align: left;
@@ -221,7 +215,7 @@ body {
 
 .subtext {
     font-size: 0.88rem;
-    color: #64748b;
+    color: #9d174d;
     line-height: 1.45;
     margin-bottom: 1.25rem;
     text-align: left;
@@ -245,7 +239,7 @@ body {
 .input-field label, .field-label {
     font-size: 0.7rem;
     font-weight: 800;
-    color: #94a3b8;
+    color: #db2777;
     letter-spacing: 0.05em;
     margin-bottom: 0.35rem;
 }
@@ -253,14 +247,14 @@ body {
 .input-field input {
     padding: 0.75rem 0.85rem;
     border-radius: 0.85rem;
-    border: 1.5px solid #e2e8f0;
-    background: #f8fafc;
+    border: 1.5px solid #f472b6;
+    background: #ffffff;
     font-size: 0.88rem;
     font-weight: 700;
-    color: #0f172a;
+    color: #831843;
     outline: none;
 }
-.input-field input:focus { border-color: #4f46e5; background: #fff; }
+.input-field input:focus { border-color: #db2777; box-shadow: 0 0 0 3px rgba(219,39,119,0.15); }
 
 .vibe-selector {
     display: grid;
@@ -276,14 +270,14 @@ body {
     gap: 0.5rem;
     padding: 0.75rem 0.75rem;
     border-radius: 0.9rem;
-    border: 1.5px solid #f1f5f9;
-    background: #f8fafc;
+    border: 1.5px solid #f472b6;
+    background: #ffffff;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 .vibe-chip .chip-emoji { font-size: 1.15rem; flex-shrink: 0; }
-.vibe-chip .chip-text { font-size: 0.8rem; font-weight: 700; color: #334155; line-height: 1.2; text-align: left; }
-.vibe-chip.active { border-color: #4f46e5; background: #eeefff; }
+.vibe-chip .chip-text { font-size: 0.8rem; font-weight: 700; color: #831843; line-height: 1.2; text-align: left; }
+.vibe-chip.active { border-color: #db2777; background: #f7b6e7; box-shadow: 0 0 0 2px rgba(219,39,119,0.2); }
 
 .button-stage {
     display: flex;
@@ -291,6 +285,10 @@ body {
     gap: 0.6rem;
     width: 100%;
 }
+
+/* =========================================================
+   BLACKPINK GRADIENT BUTTONS
+   ========================================================= */
 
 .btn {
     width: 100%;
@@ -304,18 +302,22 @@ body {
 }
 
 .btn-primary {
-    background: #4f46e5;
+    background: linear-gradient(135deg, #000000 0%, #db2777 50%, #ff1493 100%);
     color: #ffffff;
-    box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+    box-shadow: 0 10px 20px -5px rgba(219, 39, 119, 0.4);
+    border: 1px solid rgba(255,255,255,0.2);
 }
-.btn-primary:hover { background: #4338ca; }
+.btn-primary:hover {
+    background: linear-gradient(135deg, #111111 0%, #be185d 50%, #e11d48 100%);
+    transform: translateY(-1px);
+}
 
-.btn-ghost { background: transparent; color: #64748b; }
+.btn-ghost { background: transparent; color: #9d174d; }
 
 .ticket-card {
     width: 100%;
-    background: #f8fafc;
-    border: 1.5px dashed #cbd5e1;
+    background: #ffffff;
+    border: 1.5px dashed #f472b6;
     border-radius: 1.1rem;
     padding: 1rem;
     margin-bottom: 1rem;
@@ -330,57 +332,40 @@ body {
     align-items: center;
     gap: 0.5rem;
 }
-.ticket-label { font-size: 0.68rem; font-weight: 800; color: #94a3b8; }
-.ticket-value { font-size: 0.82rem; font-weight: 700; color: #0f172a; text-align: right; }
+.ticket-label { font-size: 0.68rem; font-weight: 800; color: #db2777; }
+.ticket-value { font-size: 0.82rem; font-weight: 700; color: #831843; text-align: right; }
 
 /* =========================================================
-   SCROLLABLE LIVE CONFIRMED SQUAD LIST (EXACTLY ~4 VISIBLE)
+   SCROLLABLE LIVE SQUAD BOX CONTAINER
    ========================================================= */
 
 .live-list-box {
     width: 100%;
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    border: 1.5px solid #f472b6;
     border-radius: 1.1rem;
     padding: 1rem;
     margin-bottom: 1.25rem;
-    
-    /* FIX: Restrict the box height & enable internal scrolling inside the box */
     max-height: 220px;
     overflow-y: auto;
     box-sizing: border-box;
 }
 
-/* Custom Smooth Scrollbar inside the Live Squad Box */
-.live-list-box::-webkit-scrollbar {
-    width: 6px;
-}
-.live-list-box::-webkit-scrollbar-track {
-    background: #e2e8f0;
-    border-radius: 10px;
-}
-.live-list-box::-webkit-scrollbar-thumb {
-    background: #94a3b8;
-    border-radius: 10px;
-}
-.live-list-box::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
-}
+.live-list-box::-webkit-scrollbar { width: 6px; }
+.live-list-box::-webkit-scrollbar-track { background: #fdf2f8; border-radius: 10px; }
+.live-list-box::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 10px; }
 
-
-/* Height fitted to show ~4 attendee cards cleanly */
-.attendee-scroll-area {
-    max-height: 185px;
-    overflow-y: auto;
-    padding-right: 0.2rem;
-}
-
-.attendee-scroll-area::-webkit-scrollbar {
-    width: 5px;
-}
-.attendee-scroll-area::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
+.live-list-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #831843;
+    margin-bottom: 0.65rem;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    padding-bottom: 0.25rem;
+    z-index: 2;
 }
 
 .attendee-list {
@@ -391,13 +376,13 @@ body {
 }
 
 .attendee-list li {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+    background: #fdf2f8;
+    border: 1px solid #fbcfe8;
     border-radius: 0.65rem;
     padding: 0.55rem 0.75rem;
     font-size: 0.82rem;
     font-weight: 700;
-    color: #0f172a;
+    color: #831843;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -405,26 +390,81 @@ body {
 
 .attendee-list li .time-tag {
     font-size: 0.68rem;
-    color: #64748b;
+    color: #be185d;
     font-weight: 500;
 }
 
-
 /* =========================================================
-   MOBILE PERFORMANCE OPTIMIZATION (Fixes 45s Delay)
+   MOBILE PERFORMANCE OPTIMIZATIONS
    ========================================================= */
 
 @media screen and (max-width: 768px) {
-    /* Reduce spotlight blur load on mobile GPUs */
-    .club-spotlight {
-        width: 300px;
-        height: 300px;
-        filter: blur(70px);
-        opacity: 0.4;
-    }
+    .club-spotlight { width: 300px; height: 300px; filter: blur(80px); opacity: 0.5; }
+    .floating-emoji { display: none; }
+}
 
-    /* Hide heavy floating emojis on mobile to eliminate UI lag */
-    .floating-emoji {
-        display: none;
-    }
+
+
+
+
+
+/* =========================================================
+   BORN PINK CONCERT LASER BEAMS & STADIUM LIGHTING
+   ========================================================= */
+
+/* Sharp Concert Laser Beams */
+.concert-laser {
+    position: absolute;
+    top: -10%;
+    width: 6px;
+    height: 150vh;
+    background: linear-gradient(to bottom, rgba(255, 20, 147, 0.95), rgba(255, 105, 180, 0.5), transparent);
+    box-shadow: 0 0 30px 8px rgba(255, 20, 147, 0.65);
+    transform-origin: top center;
+    pointer-events: none;
+    z-index: 1;
+    animation: laserSweep 6s infinite alternate ease-in-out;
+}
+
+.laser-1 { left: 15%; animation-duration: 7s; }
+.laser-2 { left: 35%; animation-duration: 5.5s; animation-delay: -1.5s; }
+.laser-3 { left: 65%; animation-duration: 6.5s; animation-delay: -2s; }
+.laser-4 { left: 85%; animation-duration: 8s; animation-delay: -0.8s; }
+
+@keyframes laserSweep {
+    0% { transform: rotate(var(--rot, -20deg)) scaleY(0.95); opacity: 0.5; }
+    50% { transform: rotate(calc(var(--rot, -20deg) + 12deg)) scaleY(1.1); opacity: 0.95; }
+    100% { transform: rotate(calc(var(--rot, -20deg) - 12deg)) scaleY(0.9); opacity: 0.5; }
+}
+
+/* Ambient Stage Glow */
+.club-spotlight {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(130px);
+    opacity: 0.6;
+    z-index: 1;
+    pointer-events: none;
+    animation: concertGlow 9s infinite alternate ease-in-out;
+}
+
+.spot-pink {
+    background: radial-gradient(circle, #ff1493 0%, rgba(255,20,147,0) 70%);
+    top: -20%;
+    left: 15%;
+}
+
+.spot-magenta {
+    background: radial-gradient(circle, #db2777 0%, rgba(219,39,119,0) 70%);
+    bottom: -20%;
+    right: 15%;
+    animation-delay: -4s;
+}
+
+@keyframes concertGlow {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.25); opacity: 0.8; }
+    100% { transform: scale(0.95); opacity: 0.5; }
 }
