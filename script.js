@@ -159,40 +159,63 @@ function listenToLiveAttendees() {
     }
 }
 
-// Mobile-Compatible Copy Action
+// Mobile-Compatible Copy Action (iOS Safari & Android Ready)
 window.copyInvite = function() {
-    const attendee = document.getElementById('ticketAttendee') ? document.getElementById('ticketAttendee').textContent : '';
-    const when = document.getElementById('ticketWhen') ? document.getElementById('ticketWhen').textContent : '';
-    const time = document.getElementById('ticketTime') ? document.getElementById('ticketTime').textContent : '';
-    const vibe = document.getElementById('ticketVibe') ? document.getElementById('ticketVibe').textContent : '';
+    const attendee = document.getElementById('ticketAttendee') ? document.getElementById('ticketAttendee').textContent.trim() : '';
+    const when = document.getElementById('ticketWhen') ? document.getElementById('ticketWhen').textContent.trim() : '';
+    const time = document.getElementById('ticketTime') ? document.getElementById('ticketTime').textContent.trim() : '';
+    const vibe = document.getElementById('ticketVibe') ? document.getElementById('ticketVibe').textContent.trim() : '';
 
-    const text = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n✍️ Confirmed By (Proof): ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌`;
+    const textToCopy = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n✍️ Confirmed By (Proof): ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌`;
 
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-            alert("Invite details copied to clipboard!");
+    // Try standard Web Clipboard API first
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            alert("💌 Invite details copied to clipboard!");
         }).catch(() => {
-            fallbackCopyText(text);
+            mobileFallbackCopy(textToCopy);
         });
     } else {
-        fallbackCopyText(text);
+        mobileFallbackCopy(textToCopy);
     }
 };
 
-function fallbackCopyText(text) {
+// Robust Fallback Copy for iOS Safari, WebViews, and HTTP pages
+function mobileFallbackCopy(text) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
+    
+    // Prevent iOS keyboard pop-up and scrolling glitches
     textArea.style.position = "fixed";
     textArea.style.top = "0";
     textArea.style.left = "0";
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = "0";
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
+    textArea.setAttribute("readonly", "");
+
     document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
+
+    // iOS Safari selection range selection fix
+    if (navigator.userAgent.match(/ipad|iphone/i)) {
+        const range = document.createRange();
+        range.selectNodeContents(textArea);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        textArea.setSelectionRange(0, 999999);
+    } else {
+        textArea.select();
+    }
 
     try {
         const successful = document.execCommand('copy');
         if (successful) {
-            alert("Invite details copied to clipboard!");
+            alert("💌 Invite details copied to clipboard!");
         } else {
             alert("Copy failed. Please copy manually.");
         }
