@@ -462,6 +462,68 @@ body {
     white-space: nowrap;
 }
 
+/* =========================================================
+   SCROLLABLE LIVE CONFIRMED SQUAD LIST (HIDDEN UNDER HEADER)
+   ========================================================= */
+
+.live-list-box {
+    width: 100%;
+    background: #ffffff;
+    border: 1.5px solid #f472b6;
+    border-radius: 1.1rem;
+    padding: 0.85rem 1rem 1rem 1rem;
+    margin-bottom: 1.25rem;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Scrollable Container for Attendee Cards */
+.attendee-scroll-area {
+    max-height: 180px;
+    overflow-y: auto;
+    padding-right: 0.2rem;
+    /* Smooth iOS momentum scrolling */
+    -webkit-overflow-scrolling: touch; 
+}
+
+/* Custom Scrollbar inside Squad Area */
+.attendee-scroll-area::-webkit-scrollbar { 
+    width: 5px; 
+}
+.attendee-scroll-area::-webkit-scrollbar-track { 
+    background: #fdf2f8; 
+    border-radius: 10px; 
+}
+.attendee-scroll-area::-webkit-scrollbar-thumb { 
+    background: #f472b6; 
+    border-radius: 10px; 
+}
+
+/* Sticky Header Title - Blocks items scrolling under it */
+.live-list-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #831843;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    /* Solid background prevents text beneath from bleeding through */
+    background-color: #ffffff; 
+    padding-top: 0.25rem;
+    padding-bottom: 0.65rem;
+    margin-bottom: 0.25rem;
+    z-index: 10; /* Keeps header strictly on top of scrolling list items */
+}
+
+.attendee-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+}
+
 
 /* =========================================================
    BORN PINK CONCERT LASER BEAMS & STADIUM LIGHTING
