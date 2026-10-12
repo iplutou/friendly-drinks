@@ -82,46 +82,46 @@ window.selectVibe = function(element, vibeName) {
     selectedVibeText = vibeName;
 };
 
-window.handlePlanSubmit = function(event) {
-    event.preventDefault();
+// window.handlePlanSubmit = function(event) {
+//     event.preventDefault();
 
-    const attendeeName = document.getElementById('attendeeNameInput').value.trim();
-    const dateVal = document.getElementById('dateInput').value;
-    const timeVal = document.getElementById('timeInput').value;
+//     const attendeeName = document.getElementById('attendeeNameInput').value.trim();
+//     const dateVal = document.getElementById('dateInput').value;
+//     const timeVal = document.getElementById('timeInput').value;
 
-    const formattedDate = new Date(dateVal + 'T00:00:00').toLocaleDateString('en-US', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric'
-    });
+//     const formattedDate = new Date(dateVal + 'T00:00:00').toLocaleDateString('en-US', {
+//         weekday: 'short',
+//         month: 'short',
+//         day: 'numeric'
+//     });
 
-    // Update ticket text immediately
-    const elAttendee = document.getElementById('ticketAttendee');
-    const elWhen = document.getElementById('ticketWhen');
-    const elTime = document.getElementById('ticketTime');
-    const elVibe = document.getElementById('ticketVibe');
+//     // Update ticket text immediately
+//     const elAttendee = document.getElementById('ticketAttendee');
+//     const elWhen = document.getElementById('ticketWhen');
+//     const elTime = document.getElementById('ticketTime');
+//     const elVibe = document.getElementById('ticketVibe');
 
-    if (elAttendee) elAttendee.textContent = attendeeName;
-    if (elWhen) elWhen.textContent = formattedDate;
-    if (elTime) elTime.textContent = timeVal;
-    if (elVibe) elVibe.textContent = selectedVibeText;
+//     if (elAttendee) elAttendee.textContent = attendeeName;
+//     if (elWhen) elWhen.textContent = formattedDate;
+//     if (elTime) elTime.textContent = timeVal;
+//     if (elVibe) elVibe.textContent = selectedVibeText;
 
-    // STEP 1: SWITCH VIEW INSTANTLY
-    window.goToStep(3);
+//     // STEP 1: SWITCH VIEW INSTANTLY
+//     window.goToStep(3);
 
-    // STEP 2: ASYNCHRONOUS FIREBASE WRITE (Non-blocking)
-    setTimeout(() => {
-        addDoc(attendeesCollection, {
-            name: attendeeName,
-            date: formattedDate,
-            time: timeVal,
-            vibe: selectedVibeText,
-            timestamp: serverTimestamp()
-        }).catch((error) => {
-            console.error("Firebase background sync error:", error);
-        });
-    }, 50);
-};
+//     // STEP 2: ASYNCHRONOUS FIREBASE WRITE (Non-blocking)
+//     setTimeout(() => {
+//         addDoc(attendeesCollection, {
+//             name: attendeeName,
+//             date: formattedDate,
+//             time: timeVal,
+//             vibe: selectedVibeText,
+//             timestamp: serverTimestamp()
+//         }).catch((error) => {
+//             console.error("Firebase background sync error:", error);
+//         });
+//     }, 50);
+// };
 
 // Listen to Firestore real-time updates
 // function listenToLiveAttendees() {
@@ -161,6 +161,47 @@ window.handlePlanSubmit = function(event) {
 //         console.log("Firebase listening standby:", err);
 //     }
 // }
+
+window.handlePlanSubmit = function(event) {
+    event.preventDefault();
+
+    const attendeeName = document.getElementById('attendeeNameInput').value.trim();
+    const dateVal = document.getElementById('dateInput').value;
+    const timeVal = document.getElementById('timeInput').value;
+
+    const formattedDate = new Date(dateVal + 'T00:00:00').toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+    });
+
+    // Update ticket text immediately
+    const elAttendee = document.getElementById('ticketAttendee');
+    const elWhen = document.getElementById('ticketWhen');
+    const elTime = document.getElementById('ticketTime');
+    const elVibe = document.getElementById('ticketVibe');
+
+    if (elAttendee) elAttendee.textContent = attendeeName;
+    if (elWhen) elWhen.textContent = formattedDate;
+    if (elTime) elTime.textContent = timeVal;
+    if (elVibe) elVibe.textContent = selectedVibeText;
+
+    // STEP 1: SWITCH VIEW INSTANTLY
+    window.goToStep(3);
+
+    // STEP 2: ASYNCHRONOUS FIREBASE WRITE (Non-blocking)
+    setTimeout(() => {
+        addDoc(attendeesCollection, {
+            name: attendeeName,
+            date: formattedDate,
+            time: timeVal,
+            vibe: selectedVibeText, // Stores chosen drink vibe / place
+            timestamp: serverTimestamp()
+        }).catch((error) => {
+            console.error("Firebase background sync error:", error);
+        });
+    }, 50);
+};
 
 // Listen to Firestore real-time updates and auto-filter/delete expired dates
 function listenToLiveAttendees() {
