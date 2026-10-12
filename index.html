@@ -70,14 +70,28 @@
                 didn’t ask for them but here we are… so yeah, let’s hang out 👉👈
             </p>
 
-            <div class="button-stage">
+            <!-- <div class="button-stage">
                 <button class="btn btn-primary" onclick="goToStep(2)">
                     103% yesss 🫡✅
                 </button>
                 <button id="runawayBtn" class="btn btn-ghost">
                     say no & u'r getting a tiny beating 🥊 okaii mai???
                 </button>
+            </div> -->
+
+            <!-- Interactive Choice Stage -->
+            <div class="choice-container">
+                <button id="yesBtn" class="btn btn-primary" onclick="goToStep(2)">
+                    103% yesss 👈✅
+                </button>
+                <button id="noBtn" class="btn btn-no" onclick="handleNoClick()">
+                    no ❌
+                </button>
             </div>
+
+            <p class="warning-subtext">
+                say no & u'r getting a tiny beating 🥊 okaii mai???
+            </p>
         </section>
 
         <!-- VIEW 2: Time & Vibe Picker -->
