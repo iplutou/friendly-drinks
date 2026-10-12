@@ -1,6 +1,3 @@
-// import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-// import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -23,7 +20,7 @@ const attendeesCollection = collection(db, "hangout_attendees");
 let selectedVibeText = "Gathering at Home for Cooking Dinner 🍳";
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Default date setup
+    // 1. Default date setup (Tomorrow)
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const dateInput = document.getElementById('dateInput');
@@ -31,27 +28,37 @@ document.addEventListener('DOMContentLoaded', () => {
         dateInput.value = tomorrow.toISOString().split('T')[0];
     }
 
-    // Runaway No Button Logic
-    const runawayBtn = document.getElementById('runawayBtn');
-    if (runawayBtn) {
-        const moveBtn = () => {
-            const x = (Math.random() - 0.5) * 180;
-            const y = (Math.random() - 0.5) * 120;
-            runawayBtn.style.transform = `translate(${x}px, ${y}px)`;
+    // 2. Dodging "No" Button Setup
+    const noBtn = document.getElementById('noBtn') || document.getElementById('runawayBtn');
+    if (noBtn) {
+        const moveNoButton = () => {
+            const randomX = (Math.random() - 0.5) * 160; // moves left/right
+            const randomY = (Math.random() - 0.5) * 100; // moves up/down
+            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
         };
-        runawayBtn.addEventListener('mouseover', moveBtn);
-        runawayBtn.addEventListener('touchstart', moveBtn, { passive: true });
+
+        // Move away when mouse hovers (Desktop)
+        noBtn.addEventListener('mouseover', moveNoButton);
+
+        // Move away when touched (Mobile)
+        noBtn.addEventListener('touchstart', moveNoButton, { passive: true });
     }
 
-    // Start Real-Time Firestore Listener
+    // 3. Start Real-Time Firestore Listener
     listenToLiveAttendees();
 });
 
-// EXPOSE GLOBAL FUNCTIONS FOR HTML ATTR (ONCLICK)
+// =========================================================
+// GLOBAL FUNCTIONS (EXPOSED FOR HTML ONCLICK ATTR)
+// =========================================================
 
-// Instant View Switcher optimized for Mobile
+// "No" Button Popup Warning Handler
+window.handleNoClick = function() {
+    alert("🥊 Oh no you didn't! Say yes or get a tiny beating 👊💥");
+};
+
+// Instant View Switcher
 window.goToStep = function(stepNumber) {
-    // 1. Hide current views immediately
     const panels = document.querySelectorAll('.view-panel');
     const dots = document.querySelectorAll('.dot');
     
@@ -64,15 +71,15 @@ window.goToStep = function(stepNumber) {
     if (targetPanel) targetPanel.classList.add('active');
     if (targetDot) targetDot.classList.add('active');
 
-    // 2. Defer heavy Confetti animation so it doesn't block view switching on mobile
+    // Defer heavy Confetti animation so view transition remains smooth on mobile
     if (stepNumber === 3 && typeof confetti === 'function') {
         setTimeout(() => {
             confetti({
-                particleCount: 50, // Reduced count for mobile devices
+                particleCount: 50,
                 spread: 50,
                 origin: { y: 0.6 }
             });
-        }, 100); // 100ms delay allows the DOM to finish painting View 3 first
+        }, 100);
     }
 };
 
@@ -82,113 +89,7 @@ window.selectVibe = function(element, vibeName) {
     selectedVibeText = vibeName;
 };
 
-// window.handlePlanSubmit = function(event) {
-//     event.preventDefault();
-
-//     const attendeeName = document.getElementById('attendeeNameInput').value.trim();
-//     const dateVal = document.getElementById('dateInput').value;
-//     const timeVal = document.getElementById('timeInput').value;
-
-//     const formattedDate = new Date(dateVal + 'T00:00:00').toLocaleDateString('en-US', {
-//         weekday: 'short',
-//         month: 'short',
-//         day: 'numeric'
-//     });
-
-//     // Update ticket text immediately
-//     const elAttendee = document.getElementById('ticketAttendee');
-//     const elWhen = document.getElementById('ticketWhen');
-//     const elTime = document.getElementById('ticketTime');
-//     const elVibe = document.getElementById('ticketVibe');
-
-//     if (elAttendee) elAttendee.textContent = attendeeName;
-//     if (elWhen) elWhen.textContent = formattedDate;
-//     if (elTime) elTime.textContent = timeVal;
-//     if (elVibe) elVibe.textContent = selectedVibeText;
-
-//     // STEP 1: SWITCH VIEW INSTANTLY
-//     window.goToStep(3);
-
-//     // STEP 2: ASYNCHRONOUS FIREBASE WRITE (Non-blocking)
-//     setTimeout(() => {
-//         addDoc(attendeesCollection, {
-//             name: attendeeName,
-//             date: formattedDate,
-//             time: timeVal,
-//             vibe: selectedVibeText,
-//             timestamp: serverTimestamp()
-//         }).catch((error) => {
-//             console.error("Firebase background sync error:", error);
-//         });
-//     }, 50);
-// };
-
-// Listen to Firestore real-time updates
-// function listenToLiveAttendees() {
-//     try {
-//         onSnapshot(attendeesCollection, (snapshot) => {
-//             const listEl = document.getElementById('liveAttendeeList');
-//             const countEl = document.getElementById('attendeeCount');
-
-//             if (!listEl) return;
-
-//             if (snapshot.empty) {
-//                 listEl.innerHTML = "<li>No confirmed attendees yet. Be the first! ✍️</li>";
-//                 if (countEl) countEl.textContent = "0";
-//                 return;
-//             }
-
-//             if (countEl) countEl.textContent = snapshot.docs.length;
-//             let html = "";
-
-//             snapshot.docs.forEach(doc => {
-//                 const data = doc.data();
-//                 html += `
-//                     <li>
-//                         <span>✍️ <b>${data.name || 'Anonymous'}</b></span>
-//                         <span class="time-tag">📅 ${data.date || '--'} @ ${data.time || '--'}</span>
-//                     </li>
-//                 `;
-//             });
-
-//             listEl.innerHTML = html;
-//         }, (error) => {
-//             console.error("Firestore snapshot error:", error);
-//             const listEl = document.getElementById('liveAttendeeList');
-//             if (listEl) listEl.innerHTML = "<li>Unable to load live list.</li>";
-//         });
-//     } catch (err) {
-//         console.log("Firebase listening standby:", err);
-//     }
-// }
-
-const noBtn = document.getElementById('noBtn');
-
-if (noBtn) {
-    const moveNoButton = () => {
-        // Calculate random coordinates inside the app card
-        const x = Math.random() * (window.innerWidth < 440 ? 120 : 200) - 60;
-        const y = Math.random() * 100 - 50;
-        
-        noBtn.style.transform = `translate(${x}px, ${y}px)`;
-    };
-
-    // Move away on hover (Desktop) and touch (Mobile)
-    noBtn.addEventListener('mouseover', moveNoButton);
-    noBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevents click on mobile
-        moveNoButton();
-    });
-}
-
-function handleNoClick() {
-    alert("🥊 Nope! 'No' is not an option. Lock it in!");
-}
-
-function handleNoClick() {
-    alert("🥊 Oh no you didn't! Say yes or get a tiny beating 👊💥");
-}
-
+// Plan Submission Handler
 window.handlePlanSubmit = function(event) {
     event.preventDefault();
 
@@ -216,13 +117,13 @@ window.handlePlanSubmit = function(event) {
     // STEP 1: SWITCH VIEW INSTANTLY
     window.goToStep(3);
 
-    // STEP 2: ASYNCHRONOUS FIREBASE WRITE (Non-blocking)
+    // STEP 2: ASYNCHRONOUS FIREBASE WRITE
     setTimeout(() => {
         addDoc(attendeesCollection, {
             name: attendeeName,
             date: formattedDate,
             time: timeVal,
-            vibe: selectedVibeText, // Stores chosen drink vibe / place
+            vibe: selectedVibeText,
             timestamp: serverTimestamp()
         }).catch((error) => {
             console.error("Firebase background sync error:", error);
@@ -230,85 +131,7 @@ window.handlePlanSubmit = function(event) {
     }, 50);
 };
 
-// Listen to Firestore real-time updates and auto-filter/delete expired dates
-// function listenToLiveAttendees() {
-//     try {
-//         onSnapshot(attendeesCollection, (snapshot) => {
-//             const listEl = document.getElementById('liveAttendeeList');
-//             const countEl = document.getElementById('attendeeCount');
-
-//             if (!listEl) return;
-
-//             if (snapshot.empty) {
-//                 listEl.innerHTML = "<li>No confirmed attendees yet. Be the first! ✍️</li>";
-//                 if (countEl) countEl.textContent = "0";
-//                 return;
-//             }
-
-//             // Get current date set to midnight (start of today)
-//             const today = new Date();
-//             today.setHours(0, 0, 0, 0);
-
-//             let html = "";
-//             let activeCount = 0;
-
-//             snapshot.docs.forEach(docSnap => {
-//                 const data = docSnap.data();
-                
-//                 // Parse date value to check if it's in the past
-//                 let isPastDate = false;
-
-//                 if (data.date) {
-//                     // Append current year for accurate JS Date parsing
-//                     const currentYear = new Date().getFullYear();
-//                     const parsedDate = new Date(`${data.date}, ${currentYear}`);
-
-//                     // Compare with today's date
-//                     if (!isNaN(parsedDate.getTime())) {
-//                         parsedDate.setHours(23, 59, 59, 999); // Allow until end of that day
-//                         if (parsedDate < new Date()) {
-//                             isPastDate = true;
-//                         }
-//                     }
-//                 }
-
-//                 // If date has passed, automatically delete it from Firestore in background
-//                 if (isPastDate) {
-//                     deleteDoc(doc(db, "hangout_attendees", docSnap.id)).catch(err => {
-//                         console.log("Auto-delete past event error:", err);
-//                     });
-//                     return; // Skip rendering this expired attendee
-//                 }
-
-//                 // Render active/upcoming attendees
-//                 activeCount++;
-//                 html += `
-//                     <li>
-//                         <span>✍️ <b>${data.name || 'Anonymous'}</b></span>
-//                         <span class="time-tag">📅 ${data.date || '--'} @ ${data.time || '--'}</span>
-//                     </li>
-//                 `;
-//             });
-
-//             if (countEl) countEl.textContent = activeCount;
-
-//             if (activeCount === 0) {
-//                 listEl.innerHTML = "<li>No upcoming confirmed attendees. Lock your slot! ✍️</li>";
-//             } else {
-//                 listEl.innerHTML = html;
-//             }
-
-//         }, (error) => {
-//             console.error("Firestore snapshot error:", error);
-//             const listEl = document.getElementById('liveAttendeeList');
-//             if (listEl) listEl.innerHTML = "<li>Unable to load live list.</li>";
-//         });
-//     } catch (err) {
-//         console.log("Firebase listening standby:", err);
-//     }
-// }
-
-// Listen to Firestore real-time updates and display chosen plan/vibe
+// Listen to Firestore real-time updates & auto-delete expired dates
 function listenToLiveAttendees() {
     try {
         onSnapshot(attendeesCollection, (snapshot) => {
@@ -332,7 +155,6 @@ function listenToLiveAttendees() {
             snapshot.docs.forEach(docSnap => {
                 const data = docSnap.data();
                 
-                // Parse date value to check if it's in the past
                 let isPastDate = false;
 
                 if (data.date) {
@@ -357,7 +179,6 @@ function listenToLiveAttendees() {
 
                 activeCount++;
                 
-                // Render attendee name, chosen vibe/place, and date/time
                 html += `
                     <li class="squad-item">
                         <div class="squad-info">
@@ -387,7 +208,7 @@ function listenToLiveAttendees() {
     }
 }
 
-// Mobile & Desktop Compatible Copy Action
+// Copy Action (Desktop & Mobile Compatible)
 window.copyInvite = function() {
     const attendee = document.getElementById('ticketAttendee') ? document.getElementById('ticketAttendee').textContent.trim() : '';
     const when = document.getElementById('ticketWhen') ? document.getElementById('ticketWhen').textContent.trim() : '';
@@ -396,7 +217,6 @@ window.copyInvite = function() {
 
     const textToCopy = `🚫🔍 Hangout Plan — No PROBLEM Hunting!\n✍️ Confirmed By (Proof): ${attendee}\n📅 Date: ${when}\n⏰ Time: ${time}\n📍 Vibe: ${vibe}\n\nNo need to let us know if it works for u or not. U'r coming anyway. 🙅🏻‍♀️❌`;
 
-    // Try modern Clipboard API
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(textToCopy).then(() => {
             alert("💌 Invite details copied to clipboard!");
@@ -408,12 +228,11 @@ window.copyInvite = function() {
     }
 };
 
-// Robust Fallback Copy designed for Mobile Safari & Android Chrome
+// Fallback Mobile Copy Engine
 function executeMobileCopy(text) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
     
-    // Prevent iOS viewport jumping or opening virtual keyboard
     textArea.style.position = "fixed";
     textArea.style.top = "0";
     textArea.style.left = "0";
@@ -428,7 +247,6 @@ function executeMobileCopy(text) {
 
     document.body.appendChild(textArea);
 
-    // iOS Safari selection range fix
     if (navigator.userAgent.match(/ipad|iphone/i)) {
         const range = document.createRange();
         range.selectNodeContents(textArea);
