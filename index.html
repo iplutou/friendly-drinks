@@ -170,11 +170,22 @@
             </div>
 
             <!-- LIVE CONFIRMED SQUAD LIST -->
-            <div class="live-list-box">
+            <!-- <div class="live-list-box">
                 <h3 class="live-list-title">⚡ Live Confirmed Squad (<span id="attendeeCount">0</span>)</h3>
                 <ul id="liveAttendeeList" class="attendee-list">
                     <li>Loading signatures...</li>
                 </ul>
+            </div> -->
+            <div class="live-list-box">
+                <!-- Fixed Header Title -->
+                <div class="live-list-title">⚡ Live Confirmed Squad (<span id="attendeeCount">0</span>)</div>
+                
+                <!-- Separate Scrollable Container -->
+                <div class="attendee-scroll-area">
+                    <ul id="liveAttendeeList" class="attendee-list">
+                        <!-- Dynamic Attendee List Items Go Here -->
+                    </ul>
+                </div>
             </div>
 
             <button class="btn btn-primary" onclick="copyInvite()">
