@@ -121,6 +121,45 @@ window.handlePlanSubmit = function(event) {
 };
 
 // Listen to Firestore real-time updates
+// function listenToLiveAttendees() {
+//     try {
+//         onSnapshot(attendeesCollection, (snapshot) => {
+//             const listEl = document.getElementById('liveAttendeeList');
+//             const countEl = document.getElementById('attendeeCount');
+
+//             if (!listEl) return;
+
+//             if (snapshot.empty) {
+//                 listEl.innerHTML = "<li>No confirmed attendees yet. Be the first! ✍️</li>";
+//                 if (countEl) countEl.textContent = "0";
+//                 return;
+//             }
+
+//             if (countEl) countEl.textContent = snapshot.docs.length;
+//             let html = "";
+
+//             snapshot.docs.forEach(doc => {
+//                 const data = doc.data();
+//                 html += `
+//                     <li>
+//                         <span>✍️ <b>${data.name || 'Anonymous'}</b></span>
+//                         <span class="time-tag">📅 ${data.date || '--'} @ ${data.time || '--'}</span>
+//                     </li>
+//                 `;
+//             });
+
+//             listEl.innerHTML = html;
+//         }, (error) => {
+//             console.error("Firestore snapshot error:", error);
+//             const listEl = document.getElementById('liveAttendeeList');
+//             if (listEl) listEl.innerHTML = "<li>Unable to load live list.</li>";
+//         });
+//     } catch (err) {
+//         console.log("Firebase listening standby:", err);
+//     }
+// }
+
+// Listen to Firestore real-time updates and auto-filter/delete expired dates
 function listenToLiveAttendees() {
     try {
         onSnapshot(attendeesCollection, (snapshot) => {
@@ -135,11 +174,43 @@ function listenToLiveAttendees() {
                 return;
             }
 
-            if (countEl) countEl.textContent = snapshot.docs.length;
-            let html = "";
+            // Get current date set to midnight (start of today)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-            snapshot.docs.forEach(doc => {
-                const data = doc.data();
+            let html = "";
+            let activeCount = 0;
+
+            snapshot.docs.forEach(docSnap => {
+                const data = docSnap.data();
+                
+                // Parse date value to check if it's in the past
+                let isPastDate = false;
+
+                if (data.date) {
+                    // Append current year for accurate JS Date parsing
+                    const currentYear = new Date().getFullYear();
+                    const parsedDate = new Date(`${data.date}, ${currentYear}`);
+
+                    // Compare with today's date
+                    if (!isNaN(parsedDate.getTime())) {
+                        parsedDate.setHours(23, 59, 59, 999); // Allow until end of that day
+                        if (parsedDate < new Date()) {
+                            isPastDate = true;
+                        }
+                    }
+                }
+
+                // If date has passed, automatically delete it from Firestore in background
+                if (isPastDate) {
+                    deleteDoc(doc(db, "hangout_attendees", docSnap.id)).catch(err => {
+                        console.log("Auto-delete past event error:", err);
+                    });
+                    return; // Skip rendering this expired attendee
+                }
+
+                // Render active/upcoming attendees
+                activeCount++;
                 html += `
                     <li>
                         <span>✍️ <b>${data.name || 'Anonymous'}</b></span>
@@ -148,7 +219,14 @@ function listenToLiveAttendees() {
                 `;
             });
 
-            listEl.innerHTML = html;
+            if (countEl) countEl.textContent = activeCount;
+
+            if (activeCount === 0) {
+                listEl.innerHTML = "<li>No upcoming confirmed attendees. Lock your slot! ✍️</li>";
+            } else {
+                listEl.innerHTML = html;
+            }
+
         }, (error) => {
             console.error("Firestore snapshot error:", error);
             const listEl = document.getElementById('liveAttendeeList');
