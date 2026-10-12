@@ -605,3 +605,43 @@ body {
     }
 }
 
+
+
+/* Side-by-Side Flex Layout */
+.choice-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    margin-bottom: 0.75rem;
+    position: relative;
+}
+
+.choice-btn {
+    flex: 1; /* Makes both buttons equal width side-by-side */
+    padding: 0.85rem 0.5rem;
+    white-space: nowrap;
+    position: relative;
+    transition: transform 0.15s ease-out;
+}
+
+.btn-no {
+    background: #fce7f3;
+    color: #be185d;
+    border: 1px solid #f472b6;
+    font-weight: 700;
+}
+
+.btn-no:hover {
+    background: #fbcfe8;
+}
+
+.warning-subtext {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #9d174d;
+    text-align: center;
+    margin-top: 0.5rem;
+}
