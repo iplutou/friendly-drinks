@@ -424,6 +424,45 @@ body {
     font-weight: 500;
 }
 
+/* Squad List Cards Styling */
+.attendee-list li.squad-item {
+    background: #fdf2f8;
+    border: 1px solid #fbcfe8;
+    border-radius: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.squad-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 0.15rem;
+}
+
+.squad-name {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #831843;
+}
+
+.squad-vibe {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #be185d;
+}
+
+.attendee-list li .time-tag {
+    font-size: 0.68rem;
+    color: #9d174d;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
 /* =========================================================
    BORN PINK CONCERT LASER BEAMS & STADIUM LIGHTING
    ========================================================= */
