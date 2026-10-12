@@ -181,8 +181,12 @@ if (noBtn) {
     });
 }
 
+// function handleNoClick() {
+//     alert("🥊 Nope! 'No' is not an option. Lock it in!");
+// }
+
 function handleNoClick() {
-    alert("🥊 Nope! 'No' is not an option. Lock it in!");
+    alert("🥊 Oh no you didn't! Say yes or get a tiny beating 👊💥");
 }
 
 window.handlePlanSubmit = function(event) {
