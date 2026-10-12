@@ -162,6 +162,29 @@ window.selectVibe = function(element, vibeName) {
 //     }
 // }
 
+const noBtn = document.getElementById('noBtn');
+
+if (noBtn) {
+    const moveNoButton = () => {
+        // Calculate random coordinates inside the app card
+        const x = Math.random() * (window.innerWidth < 440 ? 120 : 200) - 60;
+        const y = Math.random() * 100 - 50;
+        
+        noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    };
+
+    // Move away on hover (Desktop) and touch (Mobile)
+    noBtn.addEventListener('mouseover', moveNoButton);
+    noBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevents click on mobile
+        moveNoButton();
+    });
+}
+
+function handleNoClick() {
+    alert("🥊 Nope! 'No' is not an option. Lock it in!");
+}
+
 window.handlePlanSubmit = function(event) {
     event.preventDefault();
 
